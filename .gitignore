@@ -348,3 +348,10 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+*.user
+*.ncrunchsolution
+*.v3.ncrunchsolution
+*.v3.ncrunchsolution.user
+
+SmallShop.v3.ncrunchsolution.user
