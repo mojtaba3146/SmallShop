@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\SmallShop.Persistence.EF\SmallShop.Persistence.EF.csproj" />
+    <ProjectReference Include="..\SmallShop.Services\SmallShop.Services.csproj" />
   </ItemGroup>
 
 </Project>

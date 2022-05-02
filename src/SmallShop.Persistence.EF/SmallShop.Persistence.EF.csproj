@@ -11,6 +11,8 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\SmallShop.Entities\SmallShop.Entities.csproj" />
+	  <ProjectReference Include="..\SmallShop.Infrastructure\SmallShop.Infrastructure.csproj" />
+	  <ProjectReference Include="..\SmallShop.Services\SmallShop.Services.csproj" />
 	</ItemGroup>
 
 </Project>

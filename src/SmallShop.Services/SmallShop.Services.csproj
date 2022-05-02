@@ -4,4 +4,9 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SmallShop.Entities\SmallShop.Entities.csproj" />
+    <ProjectReference Include="..\SmallShop.Infrastructure\SmallShop.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
