@@ -1,4 +1,5 @@
 ﻿using SmallShop.Entities;
+using SmallShop.Services.Goodss.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,19 @@ namespace SmallShop.Test.Tools.Goodss
         public static Goods CreateGoodsWithCategory(int categoryId)
         {
             return new Goods
+            {
+                GoodsCode = 10,
+                Name = "ماست رامک",
+                Price = 500,
+                MinInventory = 20,
+                MaxInventory = 40,
+                CategoryId = categoryId,
+            };
+        }
+
+        public static AddGoodsDto CreateAddGoodsDto(int categoryId)
+        {
+            return new AddGoodsDto
             {
                 GoodsCode = 10,
                 Name = "ماست رامک",

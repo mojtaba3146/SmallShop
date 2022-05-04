@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmallShop.Persistence.EF.PurchesInvoices
+namespace SmallShop.Persistence.EF.PurchaseInvoices
 {
     public class PurchesInvoiceEntityMap : IEntityTypeConfiguration<PurchaseInvoice>
     {
