@@ -26,5 +26,12 @@ namespace SmallShop.RestAPI.Controllers
         {
             _service.Update(id,dto);
         }
+
+        [HttpGet]
+        public void GetAll()
+        {
+            _service.GetAll();
+        }
+
     }
 }

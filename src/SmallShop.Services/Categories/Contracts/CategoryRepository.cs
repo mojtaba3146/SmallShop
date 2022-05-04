@@ -13,5 +13,6 @@ namespace SmallShop.Services.Categories.Contracts
         void Add(Category category);
         bool ISExistTitle(string title);
         Category GetById(int id);
+        List<GetAllCategoryDto> GetAll();
     }
 }

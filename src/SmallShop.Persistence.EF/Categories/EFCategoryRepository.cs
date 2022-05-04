@@ -22,6 +22,14 @@ namespace SmallShop.Persistence.EF.Categories
             _dbContext.Categories.Add(category);
         }
 
+        public List<GetAllCategoryDto> GetAll()
+        {
+            return _dbContext.Categories.Select(c => new GetAllCategoryDto
+            {
+                Title = c.Title,
+            }).ToList();
+        }
+
         public Category GetById(int id)
         {
             return _dbContext.Categories.

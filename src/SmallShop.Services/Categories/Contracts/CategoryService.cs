@@ -11,5 +11,6 @@ namespace SmallShop.Services.Categories.Contracts
     {
         void Add(AddCategoryDto dto);
         void Update(int id,UpdateCategoryDto dto);
+        List<GetAllCategoryDto> GetAll();
     }
 }

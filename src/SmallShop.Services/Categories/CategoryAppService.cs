@@ -39,6 +39,11 @@ namespace SmallShop.Services.Categories
             _unitOfWork.Commit();
         }
 
+        public List<GetAllCategoryDto> GetAll()
+        {
+            return _repository.GetAll();
+        }
+
         public void Update(int id,UpdateCategoryDto dto)
         {
             var category= _repository.GetById(id);

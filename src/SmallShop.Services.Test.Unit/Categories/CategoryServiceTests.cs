@@ -93,6 +93,17 @@ namespace SmallShop.Services.Test.Unit.Categories
             expected.Should().ThrowExactly<CategoryWithGivenIdDoesNotExist>();
         }
 
+        [Fact]
+        public void GetAll_return_all_categories_properly()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            var expected=_sut.GetAll();
+
+            expected.Should().HaveCount(1);
+            expected.Should().Contain(_=>_.Title==category.Title);
+        }
 
     }
 }
