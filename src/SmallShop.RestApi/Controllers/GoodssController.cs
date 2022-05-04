@@ -20,5 +20,11 @@ namespace SmallShop.RestApi.Controllers
         {
             _service.Add(dto);
         }
+
+        [HttpGet]
+        public void GetAll()
+        {
+            _service.GetAll();
+        }
     }
 }

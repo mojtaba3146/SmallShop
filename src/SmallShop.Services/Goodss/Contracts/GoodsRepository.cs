@@ -12,5 +12,6 @@ namespace SmallShop.Services.Goodss.Contracts
     {
         void Add(Goods goods);
         bool IsExistGoodsName(string name, int categoryId);
+        List<GetAllGoodsDto> GetAll();
     }
 }

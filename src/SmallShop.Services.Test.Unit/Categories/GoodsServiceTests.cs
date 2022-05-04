@@ -85,5 +85,24 @@ namespace SmallShop.Services.Test.Unit.Categories
             Action expected = () => _sut.Add(dto);
             expected.Should().ThrowExactly<CategoryNotFoundException>();
         }
+
+        [Fact]
+        public void GetAll_return_all_goods()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+            var goods = GoodsFactory.CreateGoodsWithCategory(category.Id);
+            _dataContext.Manipulate(_ => _.Goodss.Add(goods));
+
+            var expected = _sut.GetAll();
+
+            expected.Should().HaveCount(1);
+            expected.Should().Contain(_ => _.Name == goods.Name);
+            expected.Should().Contain(_ => _.Price == goods.Price);
+            expected.Should().Contain(_ => _.GoodsCode == goods.GoodsCode);
+            expected.Should().Contain(_ => _.MinInventory == goods.MinInventory);
+            expected.Should().Contain(_ => _.MaxInventory == goods.MaxInventory);
+            expected.Should().Contain(_ => _.CategoryId == goods.CategoryId);
+        }
     }
 }

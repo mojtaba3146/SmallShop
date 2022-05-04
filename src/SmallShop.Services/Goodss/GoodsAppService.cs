@@ -57,5 +57,10 @@ namespace SmallShop.Services.Goodss
             _repository.Add(goods);
             _unitOfWork.Commit();
         }
+
+        public List<GetAllGoodsDto> GetAll()
+        {
+            return _repository.GetAll();
+        }
     }
 }

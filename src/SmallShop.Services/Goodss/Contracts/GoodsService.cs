@@ -10,5 +10,6 @@ namespace SmallShop.Services.Goodss.Contracts
     public interface GoodsService : Service
     {
         void Add(AddGoodsDto dto);
+        List<GetAllGoodsDto> GetAll();
     }
 }

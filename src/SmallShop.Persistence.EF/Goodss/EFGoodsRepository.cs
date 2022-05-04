@@ -22,6 +22,19 @@ namespace SmallShop.Persistence.EF.Goodss
             _dbContext.Goodss.Add(goods);
         }
 
+        public List<GetAllGoodsDto> GetAll()
+        {
+            return _dbContext.Goodss.Select(x => new GetAllGoodsDto
+            {
+                GoodsCode = x.GoodsCode,
+                Name = x.Name,
+                Price = x.Price,
+                MinInventory = x.MinInventory,
+                MaxInventory = x.MaxInventory,
+                CategoryId = x.CategoryId,
+            }).ToList();
+        }
+
         public bool IsExistGoodsName(string name, int categoryId)
         {
             return _dbContext.Goodss.Any(g=>g.Name == name 
