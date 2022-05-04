@@ -33,5 +33,11 @@ namespace SmallShop.RestAPI.Controllers
             _service.GetAll();
         }
 
+        [HttpDelete]
+        public void Delete(int id)
+        {
+            _service.Delete(id);
+        }
+
     }
 }

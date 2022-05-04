@@ -39,6 +39,26 @@ namespace SmallShop.Services.Categories
             _unitOfWork.Commit();
         }
 
+        public void Delete(int id)
+        {
+            var category= _repository.GetById(id);
+
+            if (category==null)
+            {
+                throw new CategoryWithGivenIdDoesNotExist();
+            }
+
+            var isGoodsExist = _repository.IsGoodsExist(category.Id);
+
+            if (isGoodsExist)
+            {
+                throw new GoodsExistInCategoryException();
+            }
+
+            _repository.Delete(category);
+            _unitOfWork.Commit();
+        }
+
         public List<GetAllCategoryDto> GetAll()
         {
             return _repository.GetAll();

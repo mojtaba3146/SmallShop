@@ -14,5 +14,7 @@ namespace SmallShop.Services.Categories.Contracts
         bool ISExistTitle(string title);
         Category GetById(int id);
         List<GetAllCategoryDto> GetAll();
+        void Delete(Category category);
+        bool IsGoodsExist(int id);
     }
 }

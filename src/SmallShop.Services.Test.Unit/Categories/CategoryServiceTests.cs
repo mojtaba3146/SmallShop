@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using SmallShop.Entities;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Infrastructure.Test;
 using SmallShop.Persistence.EF;
@@ -7,6 +8,7 @@ using SmallShop.Services.Categories;
 using SmallShop.Services.Categories.Contracts;
 using SmallShop.Services.Categories.Exceptions;
 using SmallShop.Test.Tools.Categories;
+using SmallShop.Test.Tools.Goodss;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -103,6 +105,40 @@ namespace SmallShop.Services.Test.Unit.Categories
 
             expected.Should().HaveCount(1);
             expected.Should().Contain(_=>_.Title==category.Title);
+        }
+
+        [Fact]
+        public void Delete_delete_category_properly()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+
+            _sut.Delete(category.Id);
+
+            _dataContext.Categories.Should()
+                .NotContain(_=>_.Title==category.Title);
+        }
+
+        [Theory]
+        [InlineData(500)]
+        public void Delete_throw_CategoryWithGivenIdDoesNotExist_when_given_id_does_not_exist(int fakeCategoryId)
+        {
+            Action expected = () => _sut.Delete(fakeCategoryId);
+
+            expected.Should().ThrowExactly<CategoryWithGivenIdDoesNotExist>();
+        }
+
+        [Fact]
+        public void Delete_throw_GoodsExistInCategoryException_when_goods_exist_in_category()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+            var goods = GoodsFactory.CreateGoodsWithCategory(category.Id);
+            _dataContext.Manipulate(_ => _.Goodss.Add(goods));
+
+            Action expected = () => _sut.Delete(category.Id);
+
+            expected.Should().ThrowExactly<GoodsExistInCategoryException>();
         }
 
     }

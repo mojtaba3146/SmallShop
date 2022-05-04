@@ -22,6 +22,11 @@ namespace SmallShop.Persistence.EF.Categories
             _dbContext.Categories.Add(category);
         }
 
+        public void Delete(Category category)
+        {
+            _dbContext.Categories.Remove(category);
+        }
+
         public List<GetAllCategoryDto> GetAll()
         {
             return _dbContext.Categories.Select(c => new GetAllCategoryDto
@@ -40,6 +45,13 @@ namespace SmallShop.Persistence.EF.Categories
         {
             return _dbContext.Categories
                 .Any(c => c.Title == title);
+        }
+
+        public bool IsGoodsExist(int id)
+        {
+            return _dbContext.Goodss.
+                Any(_ => _.CategoryId==id);
+
         }
     }
 }
