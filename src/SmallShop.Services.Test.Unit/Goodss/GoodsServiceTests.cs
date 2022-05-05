@@ -17,9 +17,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SmallShop.Services.Test.Unit.Categories
+namespace SmallShop.Services.Test.Unit.Goodss
 {
-    public class GoodsServiceTests 
+    public class GoodsServiceTests
     {
         private readonly EFDataContext _dataContext;
         private readonly UnitOfWork _unitOfWork;
@@ -35,7 +35,7 @@ namespace SmallShop.Services.Test.Unit.Categories
             _unitOfWork = new EFUnitOfWork(_dataContext);
             _repository = new EFGoodsRepository(_dataContext);
             _categoryRepository = new EFCategoryRepository(_dataContext);
-            _sut = new GoodsAppService(_repository, _unitOfWork,_categoryRepository);  
+            _sut = new GoodsAppService(_repository, _unitOfWork, _categoryRepository);
         }
 
         [Fact]
@@ -76,8 +76,8 @@ namespace SmallShop.Services.Test.Unit.Categories
         }
 
         [Theory]
-        [InlineData(40,20)]
-        public void Add_throw_CategoryNotFoundException_when_category_with_given_id_not_exists(int fakeCategoryId,int categoryID)
+        [InlineData(40, 20)]
+        public void Add_throw_CategoryNotFoundException_when_category_with_given_id_not_exists(int fakeCategoryId, int categoryID)
         {
             var dto = GoodsFactory.CreateAddGoodsDto(categoryID);
             dto.CategoryId = fakeCategoryId;
@@ -125,8 +125,8 @@ namespace SmallShop.Services.Test.Unit.Categories
         }
 
         [Theory]
-        [InlineData(500,2)]
-        public void Update_throw_GoodsDoesNotExistException_when_given_id_does_not_exist(int fakegoodsCode,int categoryId)
+        [InlineData(500, 2)]
+        public void Update_throw_GoodsDoesNotExistException_when_given_id_does_not_exist(int fakegoodsCode, int categoryId)
         {
             var dto = GoodsFactory.CreateUpdateGoodsDto(categoryId);
 
@@ -162,7 +162,7 @@ namespace SmallShop.Services.Test.Unit.Categories
             _dataContext.Manipulate(_ => _.Goodss.Add(goodss));
             UpdateGoodsDto dto = GoodsFactory.CreateUpdateGoods(category.Id);
 
-            Action expected = () => _sut.Update(goods.GoodsCode,dto);
+            Action expected = () => _sut.Update(goods.GoodsCode, dto);
 
             expected.Should().ThrowExactly<GoodsNameIsDuplicatedException>();
         }
@@ -178,7 +178,7 @@ namespace SmallShop.Services.Test.Unit.Categories
             _sut.Delete(goods.GoodsCode);
 
             _dataContext.Goodss.Should()
-                .NotContain(_=>_.GoodsCode==goods.GoodsCode);
+                .NotContain(_ => _.GoodsCode == goods.GoodsCode);
         }
 
         [Theory]

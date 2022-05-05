@@ -20,6 +20,7 @@ namespace SmallShop.Test.Tools.Goodss
                 MinInventory = 20,
                 MaxInventory = 40,
                 CategoryId = categoryId,
+                GoodsInventory=0
             };
         }
 
