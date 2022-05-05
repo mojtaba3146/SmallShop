@@ -104,5 +104,90 @@ namespace SmallShop.Services.Test.Unit.Categories
             expected.Should().Contain(_ => _.MaxInventory == goods.MaxInventory);
             expected.Should().Contain(_ => _.CategoryId == goods.CategoryId);
         }
+
+        [Fact]
+        public void Update_update_goods_properly()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+            var goods = GoodsFactory.CreateGoodsWithCategory(category.Id);
+            _dataContext.Manipulate(_ => _.Goodss.Add(goods));
+            var dto = GoodsFactory.CreateUpdateGoodsDto(category.Id);
+
+            _sut.Update(goods.GoodsCode, dto);
+
+            _dataContext.Goodss.Should().Contain(_ => _.Name == dto.Name);
+            _dataContext.Goodss.Should().Contain(_ => _.Price == dto.Price);
+            _dataContext.Goodss.Should().Contain(_ => _.MinInventory == dto.MinInventory);
+            _dataContext.Goodss.Should().Contain(_ => _.MaxInventory == dto.MaxInventory);
+            _dataContext.Goodss.Should().Contain(_ => _.CategoryId == dto.CategoryId);
+            _dataContext.Goodss.Should().Contain(_ => _.GoodsCode == dto.GoodsCode);
+        }
+
+        [Theory]
+        [InlineData(500,2)]
+        public void Update_throw_GoodsDoesNotExistException_when_given_id_does_not_exist(int fakegoodsCode,int categoryId)
+        {
+            var dto = GoodsFactory.CreateUpdateGoodsDto(categoryId);
+
+            Action expected = () => _sut.Update(fakegoodsCode, dto);
+
+            expected.Should().ThrowExactly<GoodsDoesNotExistException>();
+        }
+
+        [Theory]
+        [InlineData(40, 20)]
+        public void Update_throw_CategoryNotFoundException_when_category_with_given_id_not_exists(int fakeCategoryId, int categoryID)
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+            var goods = GoodsFactory.CreateGoodsWithCategory(category.Id);
+            _dataContext.Manipulate(_ => _.Goodss.Add(goods));
+            var dto = GoodsFactory.CreateUpdateGoodsDto(category.Id);
+            dto.CategoryId = fakeCategoryId;
+
+            Action expected = () => _sut.Update(goods.GoodsCode, dto);
+
+            expected.Should().ThrowExactly<CategoryNotFoundException>();
+        }
+
+        [Fact]
+        public void Update_throws_GoodsNameIsDuplicatedException_when_goods_name_already_exists_in_category()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+            var goods = GoodsFactory.CreateGoodsWithCategory(category.Id);
+            _dataContext.Manipulate(_ => _.Goodss.Add(goods));
+            var goodss = GoodsFactory.CreateGoods(category.Id);
+            _dataContext.Manipulate(_ => _.Goodss.Add(goodss));
+            UpdateGoodsDto dto = GoodsFactory.CreateUpdateGoods(category.Id);
+
+            Action expected = () => _sut.Update(goods.GoodsCode,dto);
+
+            expected.Should().ThrowExactly<GoodsNameIsDuplicatedException>();
+        }
+
+        [Fact]
+        public void Delete_delete_goods_properly()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+            var goods = GoodsFactory.CreateGoodsWithCategory(category.Id);
+            _dataContext.Manipulate(_ => _.Goodss.Add(goods));
+
+            _sut.Delete(goods.GoodsCode);
+
+            _dataContext.Goodss.Should()
+                .NotContain(_=>_.GoodsCode==goods.GoodsCode);
+        }
+
+        [Theory]
+        [InlineData(500)]
+        public void Delete_throw_GoodsDoesNotExistException_when_goods_with_given_goodscode_does_not_exist(int fakeId)
+        {
+            Action expected = () => _sut.Delete(fakeId);
+
+            expected.Should().ThrowExactly<GoodsDoesNotExistException>();
+        }
     }
 }

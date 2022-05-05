@@ -58,9 +58,57 @@ namespace SmallShop.Services.Goodss
             _unitOfWork.Commit();
         }
 
+        public void Delete(int goodsCode)
+        {
+            var goods = _repository.GetById(goodsCode);
+
+            if (goods == null)
+            {
+                throw new GoodsDoesNotExistException();
+            }
+
+            _repository.Delete(goods);
+
+            _unitOfWork.Commit();
+        }
+
         public List<GetAllGoodsDto> GetAll()
         {
             return _repository.GetAll();
+        }
+
+        public void Update(int goodsCode, UpdateGoodsDto dto)
+        {
+            Goods goods = _repository.GetById(goodsCode);
+
+            if (goods == null)
+            {
+                throw new GoodsDoesNotExistException();
+            }
+
+            var isTitleDuplicate = _repository.IsExistGoodsNameDuplicate(dto.Name
+                , dto.CategoryId,goodsCode);
+
+            if (isTitleDuplicate)
+            {
+                throw new GoodsNameIsDuplicatedException();
+            }
+
+            var isCategoryExist = _categoryRepository
+                .IsCategoryExistById(dto.CategoryId);
+
+            if (!isCategoryExist)
+            {
+                throw new CategoryNotFoundException();
+            }
+
+            goods.Name = dto.Name;
+            goods.Price = dto.Price;
+            goods.MinInventory = dto.MinInventory;
+            goods.MaxInventory = dto.MaxInventory;
+            goods.CategoryId = dto.CategoryId;
+
+            _unitOfWork.Commit();
         }
     }
 }

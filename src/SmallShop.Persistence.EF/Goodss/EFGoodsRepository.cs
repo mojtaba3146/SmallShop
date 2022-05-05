@@ -22,6 +22,11 @@ namespace SmallShop.Persistence.EF.Goodss
             _dbContext.Goodss.Add(goods);
         }
 
+        public void Delete(Goods goods)
+        {
+            _dbContext.Goodss.Remove(goods);
+        }
+
         public List<GetAllGoodsDto> GetAll()
         {
             return _dbContext.Goodss.Select(x => new GetAllGoodsDto
@@ -35,10 +40,22 @@ namespace SmallShop.Persistence.EF.Goodss
             }).ToList();
         }
 
+        public Goods GetById(int goodsCode)
+        {
+            return _dbContext.Goodss.
+                FirstOrDefault(_ => _.GoodsCode == goodsCode);
+        }
+
         public bool IsExistGoodsName(string name, int categoryId)
         {
             return _dbContext.Goodss.Any(g=>g.Name == name 
             && g.CategoryId == categoryId);
+        }
+
+        public bool IsExistGoodsNameDuplicate(string name, int categoryId, int goodsCode)
+        {
+            return _dbContext.Goodss.Any(g => g.Name == name
+            && g.CategoryId == categoryId && g.GoodsCode != goodsCode);
         }
     }
 }

@@ -19,11 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmallShop.RestApi", "SmallS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmallShop.Services", "SmallShop.Services\SmallShop.Services.csproj", "{895A53CF-9844-48CE-8695-4E05D9A42F7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmallShop.Test.Tools", "SmallShop.Test.Tools\SmallShop.Test.Tools.csproj", "{55567D7C-18C3-44BE-8150-3D00D2E8BB1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmallShop.Test.Tools", "SmallShop.Test.Tools\SmallShop.Test.Tools.csproj", "{55567D7C-18C3-44BE-8150-3D00D2E8BB1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmallShop.Services.Test.Unit", "SmallShop.Services.Test.Unit\SmallShop.Services.Test.Unit.csproj", "{D80B539D-44FC-4A00-8251-B2F33F4A4C7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmallShop.Services.Test.Unit", "SmallShop.Services.Test.Unit\SmallShop.Services.Test.Unit.csproj", "{D80B539D-44FC-4A00-8251-B2F33F4A4C7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmallShop.Specs", "SmallShop.Specs\SmallShop.Specs.csproj", "{E81E4320-66B8-4C92-9EA6-4EE3E54B3C95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmallShop.Specs", "SmallShop.Specs\SmallShop.Specs.csproj", "{E81E4320-66B8-4C92-9EA6-4EE3E54B3C95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

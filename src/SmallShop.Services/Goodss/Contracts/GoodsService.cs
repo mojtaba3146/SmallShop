@@ -11,5 +11,7 @@ namespace SmallShop.Services.Goodss.Contracts
     {
         void Add(AddGoodsDto dto);
         List<GetAllGoodsDto> GetAll();
+        void Update(int goodsCode, UpdateGoodsDto dto);
+        void Delete(int goodsCode);
     }
 }

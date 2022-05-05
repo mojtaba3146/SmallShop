@@ -23,12 +23,51 @@ namespace SmallShop.Test.Tools.Goodss
             };
         }
 
+        public static UpdateGoodsDto CreateUpdateGoodsDto(int categoryId)
+        {
+            return new UpdateGoodsDto
+            {
+                GoodsCode = 10,
+                Name = "ماست رامک",
+                Price = 700,
+                MinInventory = 20,
+                MaxInventory = 40,
+                CategoryId = categoryId,
+            };
+        }
+
         public static AddGoodsDto CreateAddGoodsDto(int categoryId)
         {
             return new AddGoodsDto
             {
                 GoodsCode = 10,
                 Name = "ماست رامک",
+                Price = 500,
+                MinInventory = 20,
+                MaxInventory = 40,
+                CategoryId = categoryId,
+            };
+        }
+
+        public static Goods CreateGoods(int categoryId)
+        {
+            return new Goods
+            {
+                GoodsCode = 11,
+                Name = "ماست میهن",
+                Price = 500,
+                MinInventory = 20,
+                MaxInventory = 40,
+                CategoryId = categoryId,
+            };
+        }
+
+        public static UpdateGoodsDto CreateUpdateGoods(int categoryId)
+        {
+            return new UpdateGoodsDto
+            {
+                GoodsCode = 10,
+                Name = "ماست میهن",
                 Price = 500,
                 MinInventory = 20,
                 MaxInventory = 40,

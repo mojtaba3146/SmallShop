@@ -13,5 +13,8 @@ namespace SmallShop.Services.Goodss.Contracts
         void Add(Goods goods);
         bool IsExistGoodsName(string name, int categoryId);
         List<GetAllGoodsDto> GetAll();
+        Goods GetById(int goodsCode);
+        void Delete(Goods goods);
+        bool IsExistGoodsNameDuplicate(string name, int categoryId, int goodsCode);
     }
 }
