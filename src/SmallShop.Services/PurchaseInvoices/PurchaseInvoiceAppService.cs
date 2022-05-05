@@ -50,5 +50,10 @@ namespace SmallShop.Services.PurchaseInvoices
             _repository.Add(purchaseInvoice);
             _unitOfWork.Commit();
         }
+
+        public List<GetAllPurchaseInvoicesDto> GetAll()
+        {
+            return _repository.GetAll();
+        }
     }
 }

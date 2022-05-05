@@ -10,5 +10,6 @@ namespace SmallShop.Services.PurchaseInvoices.Contracts
     public interface PurchaseInvoiceService : Service
     {
         void Add(AddPurchaseInvoiceDto dto);
+        List<GetAllPurchaseInvoicesDto> GetAll();
     }
 }

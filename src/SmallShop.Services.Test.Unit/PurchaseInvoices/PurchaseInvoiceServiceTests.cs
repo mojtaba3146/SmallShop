@@ -78,5 +78,31 @@ namespace SmallShop.Services.Test.Unit.PurchaseInvoices
 
             expected.Should().ThrowExactly<GoodsDoesNotExistException>();
         }
+
+        [Fact]
+        public void GetAll_return_all_purchaseInvoices_properly()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+            var goods = GoodsFactory.CreateGoodsWithCategory(category.Id);
+            _dataContext.Manipulate(_ => _.Goodss.Add(goods));
+            var purchaseInvoice = PurchaseInvoiceFactory.
+                CreatePurchaseInvoice(goods.GoodsCode);
+            _dataContext.Manipulate(_ => _
+            .PurchaseInvoices.Add(purchaseInvoice));
+
+            var expected = _sut.GetAll();
+
+            expected.Should().HaveCount(1);
+            expected.Should().Contain(_ => _.SellerName ==
+            purchaseInvoice.SellerName);
+            expected.Should().Contain(_ => _.Price == purchaseInvoice.Price);
+            expected.Should().Contain(_ => _.GoodsId ==
+            purchaseInvoice.GoodsId);
+            expected.Should().Contain(_ => _.Count == purchaseInvoice.Count);
+            expected.Should().Contain(_ => _.Date == purchaseInvoice.Date);
+            expected.Should().Contain(_ => _.InvoiceNum ==
+            purchaseInvoice.InvoiceNum);
+        }
     }
 }

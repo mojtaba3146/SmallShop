@@ -21,5 +21,19 @@ namespace SmallShop.Persistence.EF.PurchaseInvoices
         {
             _dbContext.PurchaseInvoices.Add(purchaseInvoice);
         }
+
+        public List<GetAllPurchaseInvoicesDto> GetAll()
+        {
+            return _dbContext.PurchaseInvoices.Select(x =>
+            new GetAllPurchaseInvoicesDto
+            {
+                InvoiceNum = x.InvoiceNum,
+                Date = x.Date,
+                SellerName = x.SellerName,
+                GoodsId = x.GoodsId,
+                Count = x.Count,
+                Price = x.Price,
+            }).ToList();
+        }
     }
 }

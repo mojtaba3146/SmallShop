@@ -11,6 +11,7 @@ namespace SmallShop.Services.PurchaseInvoices.Contracts
     public interface PurchaseInvoiceRepository : Repository
     {
         void Add(PurchaseInvoice purchaseInvoice);
+        List<GetAllPurchaseInvoicesDto> GetAll();
         
     }
 }
