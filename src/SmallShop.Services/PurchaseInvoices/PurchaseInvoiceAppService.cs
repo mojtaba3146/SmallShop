@@ -3,6 +3,7 @@ using SmallShop.Infrastructure.Application;
 using SmallShop.Services.Goodss.Contracts;
 using SmallShop.Services.Goodss.Exceptions;
 using SmallShop.Services.PurchaseInvoices.Contracts;
+using SmallShop.Services.PurchaseInvoices.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,13 @@ namespace SmallShop.Services.PurchaseInvoices
 
         public void Add(AddPurchaseInvoiceDto dto)
         {
+            var isExistInvoiceNum = _repository.
+                IsExistInvoiceNum(dto.InvoiceNum);
+
+            if (isExistInvoiceNum)
+            {
+                throw new InvoiceNumAlreadyExistException();
+            }
             var purchaseInvoice = new PurchaseInvoice
             {
                 Date = dto.Date,
@@ -54,6 +62,24 @@ namespace SmallShop.Services.PurchaseInvoices
         public List<GetAllPurchaseInvoicesDto> GetAll()
         {
             return _repository.GetAll();
+        }
+
+        public void Update(int invoiceNum, UpdatePurchaseInvoiceDto dto)
+        {
+            var purchaseInvoice = _repository.GetById(invoiceNum);
+
+            if (purchaseInvoice == null)
+            {
+                throw new PurchaseInvoiceDoesNotExistException();
+            }
+
+            purchaseInvoice.Price = dto.Price;
+            purchaseInvoice.SellerName = dto.SellerName;
+            purchaseInvoice.Count = dto.Count;
+            purchaseInvoice.Date = dto.Date;
+            purchaseInvoice.GoodsId = dto.GoodsId;
+
+            _unitOfWork.Commit();
         }
     }
 }

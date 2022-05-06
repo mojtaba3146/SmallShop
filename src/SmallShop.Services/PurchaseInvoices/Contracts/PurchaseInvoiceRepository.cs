@@ -12,6 +12,7 @@ namespace SmallShop.Services.PurchaseInvoices.Contracts
     {
         void Add(PurchaseInvoice purchaseInvoice);
         List<GetAllPurchaseInvoicesDto> GetAll();
-        
+        PurchaseInvoice GetById(int InvoiceNum);
+        bool IsExistInvoiceNum(int invoiceNum);
     }
 }

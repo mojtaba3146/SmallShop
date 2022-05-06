@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using SmallShop.Entities;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Infrastructure.Test;
 using SmallShop.Persistence.EF;
@@ -10,6 +11,7 @@ using SmallShop.Services.Goodss.Contracts;
 using SmallShop.Services.Goodss.Exceptions;
 using SmallShop.Services.PurchaseInvoices;
 using SmallShop.Services.PurchaseInvoices.Contracts;
+using SmallShop.Services.PurchaseInvoices.Exceptions;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
 using SmallShop.Test.Tools.PurchaseInvoices;
@@ -30,6 +32,7 @@ namespace SmallShop.Services.Test.Unit.PurchaseInvoices
         private readonly PurchaseInvoiceRepository _repository;
         private readonly GoodsRepository _goodsRepository;
         private readonly CategoryRepository _categoryRepository;
+        private PurchaseInvoice _purchaseInvoice;
 
         public PurchaseInvoiceServiceTests()
         {
@@ -80,29 +83,79 @@ namespace SmallShop.Services.Test.Unit.PurchaseInvoices
         }
 
         [Fact]
+        public void Add_throw_InvoiceNumAlreadyExistException_When_given_invoiceNum_already_exist()
+        {
+            CreatePurchaseInvoice();
+            AddPurchaseInvoiceDto dto = PurchaseInvoiceFactory.
+                CreateAddPurchaseInvoiceDto(_purchaseInvoice.GoodsId);
+
+            Action expected = () => _sut.Add(dto);
+
+            expected.Should().ThrowExactly<InvoiceNumAlreadyExistException>();
+        }
+
+        [Fact]
         public void GetAll_return_all_purchaseInvoices_properly()
         {
-            var category = CategoryFactory.CreateCategory("لبنیات");
-            _dataContext.Manipulate(_ => _.Categories.Add(category));
-            var goods = GoodsFactory.CreateGoodsWithCategory(category.Id);
-            _dataContext.Manipulate(_ => _.Goodss.Add(goods));
-            var purchaseInvoice = PurchaseInvoiceFactory.
-                CreatePurchaseInvoice(goods.GoodsCode);
-            _dataContext.Manipulate(_ => _
-            .PurchaseInvoices.Add(purchaseInvoice));
+            CreatePurchaseInvoice();
 
             var expected = _sut.GetAll();
 
             expected.Should().HaveCount(1);
             expected.Should().Contain(_ => _.SellerName ==
-            purchaseInvoice.SellerName);
-            expected.Should().Contain(_ => _.Price == purchaseInvoice.Price);
+            _purchaseInvoice.SellerName);
+            expected.Should().Contain(_ => _.Price == _purchaseInvoice.Price);
             expected.Should().Contain(_ => _.GoodsId ==
-            purchaseInvoice.GoodsId);
-            expected.Should().Contain(_ => _.Count == purchaseInvoice.Count);
-            expected.Should().Contain(_ => _.Date == purchaseInvoice.Date);
+            _purchaseInvoice.GoodsId);
+            expected.Should().Contain(_ => _.Count == _purchaseInvoice.Count);
+            expected.Should().Contain(_ => _.Date == _purchaseInvoice.Date);
             expected.Should().Contain(_ => _.InvoiceNum ==
-            purchaseInvoice.InvoiceNum);
+            _purchaseInvoice.InvoiceNum);
+        }
+
+        [Fact]
+        public void Update_update_purchaseInvoice_properly()
+        {
+            CreatePurchaseInvoice();
+            var dto = PurchaseInvoiceFactory.
+                CreateUpdatePurchaseInvoiceDto(_purchaseInvoice.GoodsId);
+
+            _sut.Update(_purchaseInvoice.InvoiceNum, dto);
+
+            _dataContext.PurchaseInvoices.Should().
+                Contain(_=>_.SellerName==dto.SellerName);
+            _dataContext.PurchaseInvoices.Should().
+                Contain(_ => _.Date == dto.Date);
+            _dataContext.PurchaseInvoices.Should().
+                Contain(_ => _.GoodsId == dto.GoodsId);
+            _dataContext.PurchaseInvoices.Should().
+                Contain(_ => _.Count == dto.Count);
+            _dataContext.PurchaseInvoices.Should().
+                Contain(_ => _.Price == dto.Price);
+        }
+
+        [Theory]
+        [InlineData(500, 2)]
+        public void Update_throw_PurchaseInvoiceDoesNotExistException_when_given_invoiceNum_does_not_exist(int fakeId,int goodsId)
+        {
+            var dto = PurchaseInvoiceFactory.
+                CreateUpdatePurchaseInvoiceDto(goodsId);
+
+            Action expected = () => _sut.Update(fakeId, dto);
+
+            expected.Should().ThrowExactly<PurchaseInvoiceDoesNotExistException>();
+        }
+
+        private void CreatePurchaseInvoice()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+            var goods = GoodsFactory.CreateGoodsWithCategory(category.Id);
+            _dataContext.Manipulate(_ => _.Goodss.Add(goods));
+            _purchaseInvoice = PurchaseInvoiceFactory.
+                CreatePurchaseInvoice(goods.GoodsCode);
+            _dataContext.Manipulate(_ => _
+            .PurchaseInvoices.Add(_purchaseInvoice));
         }
     }
 }

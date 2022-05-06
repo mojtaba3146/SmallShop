@@ -35,5 +35,17 @@ namespace SmallShop.Test.Tools.PurchaseInvoices
                 GoodsId=goodsCode
             };
         }
+
+        public static UpdatePurchaseInvoiceDto CreateUpdatePurchaseInvoiceDto(int goodsCode)
+        {
+            return new UpdatePurchaseInvoiceDto
+            {
+                Date = DateTime.Now.Date,
+                SellerName = "Amin",
+                Price = 400,
+                Count = 20,
+                GoodsId = goodsCode
+            };
+        }
     }
 }

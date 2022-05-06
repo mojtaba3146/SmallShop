@@ -35,5 +35,17 @@ namespace SmallShop.Persistence.EF.PurchaseInvoices
                 Price = x.Price,
             }).ToList();
         }
+
+        public PurchaseInvoice GetById(int InvoiceNum)
+        {
+            return _dbContext.PurchaseInvoices
+                .FirstOrDefault(x => x.InvoiceNum == InvoiceNum);
+        }
+
+        public bool IsExistInvoiceNum(int invoiceNum)
+        {
+            return _dbContext.PurchaseInvoices.
+                Any(x => x.InvoiceNum == invoiceNum);
+        }
     }
 }

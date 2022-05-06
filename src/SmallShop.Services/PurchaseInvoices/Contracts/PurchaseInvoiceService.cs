@@ -11,5 +11,6 @@ namespace SmallShop.Services.PurchaseInvoices.Contracts
     {
         void Add(AddPurchaseInvoiceDto dto);
         List<GetAllPurchaseInvoicesDto> GetAll();
+        void Update(int invoiceNum, UpdatePurchaseInvoiceDto dto);
     }
 }
