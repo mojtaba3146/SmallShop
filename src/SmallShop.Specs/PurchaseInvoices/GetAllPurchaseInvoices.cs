@@ -25,7 +25,7 @@ namespace SmallShop.Specs.PurchaseInvoices
     [Scenario("مشاهده سند ورود کالا")]
     [Feature("",
        AsA = "فروشنده ",
-       IWantTo = " درخواست مشاهده سند ورود کالا  ",
+       IWantTo = "  مشاهده سند ورود کالا  ",
        InOrderTo = "سند ورود کالا ها را مشاهده کنم"
    )]
     public class GetAllPurchaseInvoices : EFDataContextDatabaseFixture

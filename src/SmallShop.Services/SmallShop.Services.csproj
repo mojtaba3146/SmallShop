@@ -9,8 +9,4 @@
     <ProjectReference Include="..\SmallShop.Infrastructure\SmallShop.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="PurchaseInvoices\Exceptions\" />
-  </ItemGroup>
-
 </Project>

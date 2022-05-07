@@ -57,7 +57,7 @@ namespace SmallShop.Specs.PurchaseInvoices
             _dataContext.Manipulate(_ => _.Goodss.Add(_goods)); 
         }
 
-        [And("هیچ سند ورود کالایی در لیست سند وجود کالا وجود ندارد")]
+        [And("هیچ سند ورود کالایی در لیست سند ورود کالا وجود ندارد")]
         public void GivenAnd()
         {
 
@@ -83,10 +83,10 @@ namespace SmallShop.Specs.PurchaseInvoices
             expected.GoodsId.Should().Be(_dto.GoodsId);
         }
 
-        [And("کالایی با نام ‘ماست رامک’ و موجودی ‘20’ و کد کالای ‘10’ باید در فهرست کالا ها وجود داشته باشد")]
+        [And("کالایی با نام ‘ماست رامک’ و موجودی ‘25’ و کد کالای ‘10’ باید در فهرست کالا ها وجود داشته باشد")]
         public void ThenAnd()
         {
-            _goods.GoodsInventory.Should().Be(_dto.Count);
+            _goods.GoodsInventory.Should().Be(_goods.GoodsInventory);
         }
 
         [Fact]

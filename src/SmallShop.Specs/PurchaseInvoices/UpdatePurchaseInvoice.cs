@@ -52,7 +52,7 @@ namespace SmallShop.Specs.PurchaseInvoices
             CreatePurchaseInvoice();
         }
 
-        [When("درخواست ویرایش سند ورود کالا ها را می دهم")]
+        [When("درخواست ویرایش سند ورود کالا را می دهم")]
         public void When()
         {
             _dto = PurchaseInvoiceFactory.

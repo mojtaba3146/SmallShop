@@ -1,23 +1,22 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SmallShop.Services.PurchaseInvoices.Contracts;
+using SmallShop.Services.SaleInvoices.Contracts;
 
 namespace SmallShop.RestApi.Controllers
 {
-    [Route("api/purchaseinvoices")]
+    [Route("api/saleinvoices")]
     [ApiController]
-    public class PurchaseInvoicesController : ControllerBase
+    public class SaleInvoicesController : ControllerBase
     {
-        private readonly PurchaseInvoiceService _service;
+        private readonly SaleInvoiceService _service;
 
-        public PurchaseInvoicesController(
-            PurchaseInvoiceService service)
+        public SaleInvoicesController(SaleInvoiceService service)
         {
             _service = service;
         }
 
         [HttpPost]
-        public void Add(AddPurchaseInvoiceDto dto)
+        public void Add(AddSaleInvoiceDto dto)
         {
             _service.Add(dto);
         }
@@ -29,7 +28,7 @@ namespace SmallShop.RestApi.Controllers
         }
 
         [HttpPut]
-        public void Update(int invoiceNum,UpdatePurchaseInvoiceDto dto)
+        public void Update(int invoiceNum,UpdateSaleInvoiceDto dto)
         {
             _service.Update(invoiceNum, dto);
         }
