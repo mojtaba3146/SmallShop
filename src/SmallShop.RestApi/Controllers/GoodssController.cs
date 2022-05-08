@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SmallShop.Entities;
 using SmallShop.Services.Goodss.Contracts;
+using System.Collections.Generic;
 
 namespace SmallShop.RestApi.Controllers
 {
@@ -22,9 +24,9 @@ namespace SmallShop.RestApi.Controllers
         }
 
         [HttpGet]
-        public void GetAll()
+        public List<GetAllGoodsDto> GetAll()
         {
-            _service.GetAll();
+            return _service.GetAll();
         }
 
         [HttpPut]
@@ -37,6 +39,24 @@ namespace SmallShop.RestApi.Controllers
         public void Delete(int goodsCode)
         {
             _service.Delete(goodsCode);
+        }
+
+        [HttpGet("/maxsell")]
+        public GetmaxSellerGoodsDto GetMaxSellGoods()
+        {
+           return _service.GetBestSellerGoods();
+        }
+
+        [HttpGet("/mininventory")]
+        public List<GetAllGoodsWithMinInvenDto> GetMinInventory()
+        {
+            return _service.GetAllMinInventory();
+        }
+
+        [HttpGet("/maxinventory")]
+        public List<GetAllGoodsWithMaxInvenDto> GetMaxInventory()
+        {
+            return _service.GetAllMaxInventory();
         }
     }
 }

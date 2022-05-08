@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmallShop.Services.PurchaseInvoices.Contracts;
+using System.Collections.Generic;
 
 namespace SmallShop.RestApi.Controllers
 {
@@ -23,9 +24,9 @@ namespace SmallShop.RestApi.Controllers
         }
 
         [HttpGet]
-        public void GetAll()
+        public List<GetAllPurchaseInvoicesDto> GetAll()
         {
-            _service.GetAll();
+            return _service.GetAll();
         }
 
         [HttpPut]

@@ -16,5 +16,8 @@ namespace SmallShop.Services.Goodss.Contracts
         Goods GetById(int goodsCode);
         void Delete(Goods goods);
         bool IsExistGoodsNameDuplicate(string name, int categoryId, int goodsCode);
+        GetmaxSellerGoodsDto GetBestSellerGoods();
+        List<GetAllGoodsWithMinInvenDto> GetAllMinInventory();
+        List<GetAllGoodsWithMaxInvenDto> GetAllMaxInventory();
     }
 }

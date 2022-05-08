@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmallShop.Services.Categories.Contracts;
+using System.Collections.Generic;
 
 namespace SmallShop.RestAPI.Controllers
 {
@@ -28,9 +29,9 @@ namespace SmallShop.RestAPI.Controllers
         }
 
         [HttpGet]
-        public void GetAll()
+        public List<GetAllCategoryDto> GetAll()
         {
-            _service.GetAll();
+            return _service.GetAll();
         }
 
         [HttpDelete]

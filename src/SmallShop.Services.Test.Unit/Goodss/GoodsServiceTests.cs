@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using SmallShop.Entities;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Infrastructure.Test;
 using SmallShop.Persistence.EF;
@@ -26,6 +27,8 @@ namespace SmallShop.Services.Test.Unit.Goodss
         private readonly GoodsService _sut;
         private readonly GoodsRepository _repository;
         private readonly CategoryRepository _categoryRepository;
+        private Category _category;
+        private Goods _goods, _goodsTwo;
 
         public GoodsServiceTests()
         {
@@ -83,6 +86,7 @@ namespace SmallShop.Services.Test.Unit.Goodss
             dto.CategoryId = fakeCategoryId;
 
             Action expected = () => _sut.Add(dto);
+
             expected.Should().ThrowExactly<CategoryNotFoundException>();
         }
 
@@ -188,6 +192,59 @@ namespace SmallShop.Services.Test.Unit.Goodss
             Action expected = () => _sut.Delete(fakeId);
 
             expected.Should().ThrowExactly<GoodsDoesNotExistException>();
+        }
+
+        [Fact]
+        public void GetBestSellerGoods_return_goods_that_sellNum_is_max()
+        {
+            _category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(_category));
+            _goods = new GoodsBuilder(_category.Id).WithSellCount(5)
+                .WithGoodsInventory(21).Build();
+            _dataContext.Manipulate(_ => _.Goodss.Add(_goods));
+            _goodsTwo = new GoodsBuilder(_category.Id).WithName("ماست میهن")
+                .WithGoodsCode(20).WithGoodsInventory(22)
+                .WithSellCount(11).Build();
+            _dataContext.Manipulate(_ => _.Goodss.Add(_goodsTwo));
+
+            var expected = _sut.GetBestSellerGoods();
+
+            expected.Name.Should().Be(_goodsTwo.Name);
+            expected.GoodsCode.Should().Be(_goodsTwo.GoodsCode);
+        }
+
+        [Fact]
+        public void GetAllMinInventory_return_goods_with_goodsInventory_less_than_minInventory()
+        {
+            _category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(_category));
+            _goods = new GoodsBuilder(_category.Id)
+                .WithGoodsInventory(15).Build();
+            _dataContext.Manipulate(_ => _.Goodss.Add(_goods));
+
+            var expected = _sut.GetAllMinInventory();
+
+            expected.Should().HaveCount(1);
+            expected.Should().Contain(_ => _.Name == _goods.Name);
+            expected.Should().Contain(_ => _.GoodsCode == _goods.GoodsCode);
+            expected.Should().Contain(_ => _.CategoryId == _goods.CategoryId);
+        }
+
+        [Fact]
+        public void GetAllMaxInventory_return_goods_with_goodsInventory_more_than_maxInventory()
+        {
+            _category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(_category));
+            _goods = new GoodsBuilder(_category.Id)
+                .WithGoodsInventory(40).Build();
+            _dataContext.Manipulate(_ => _.Goodss.Add(_goods));
+
+            var expected = _sut.GetAllMaxInventory();
+
+            expected.Should().HaveCount(1);
+            expected.Should().Contain(_ => _.Name == _goods.Name);
+            expected.Should().Contain(_ => _.GoodsCode == _goods.GoodsCode);
+            expected.Should().Contain(_ => _.CategoryId == _goods.CategoryId);
         }
     }
 }

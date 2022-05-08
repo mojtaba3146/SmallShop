@@ -77,6 +77,21 @@ namespace SmallShop.Services.Goodss
             return _repository.GetAll();
         }
 
+        public List<GetAllGoodsWithMaxInvenDto> GetAllMaxInventory()
+        {
+            return _repository.GetAllMaxInventory();
+        }
+
+        public List<GetAllGoodsWithMinInvenDto> GetAllMinInventory()
+        {
+            return _repository.GetAllMinInventory();
+        }
+
+        public GetmaxSellerGoodsDto GetBestSellerGoods()
+        {
+            return _repository.GetBestSellerGoods();
+        }
+
         public void Update(int goodsCode, UpdateGoodsDto dto)
         {
             Goods goods = _repository.GetById(goodsCode);

@@ -40,6 +40,39 @@ namespace SmallShop.Persistence.EF.Goodss
             }).ToList();
         }
 
+        public List<GetAllGoodsWithMaxInvenDto> GetAllMaxInventory()
+        {
+            return _dbContext.Goodss.Where(x => x.GoodsInventory >= x.MaxInventory)
+                 .Select(x => new GetAllGoodsWithMaxInvenDto
+                 {
+                     CategoryId = x.CategoryId,
+                     Name = x.Name,
+                     GoodsCode = x.GoodsCode,
+                 }).ToList();
+        }
+
+        public List<GetAllGoodsWithMinInvenDto> GetAllMinInventory()
+        {
+            return _dbContext.Goodss.Where(x => x.GoodsInventory <= x.MinInventory)
+                .Select(x => new GetAllGoodsWithMinInvenDto
+                {
+                    CategoryId = x.CategoryId,
+                    Name = x.Name,
+                    GoodsCode = x.GoodsCode,
+                }).ToList();
+        }
+
+        public GetmaxSellerGoodsDto GetBestSellerGoods()
+        {
+            return (GetmaxSellerGoodsDto)_dbContext.Goodss.
+               OrderByDescending(x => x.SellCount).Select(x => new GetmaxSellerGoodsDto
+               {
+                   Name = x.Name,
+                   GoodsCode = x.GoodsCode,
+                   CategoryId = x.CategoryId,
+               }).FirstOrDefault();
+        }
+
         public Goods GetById(int goodsCode)
         {
             return _dbContext.Goodss.
