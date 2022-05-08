@@ -3,11 +3,8 @@ using SmallShop.Infrastructure.Application;
 using SmallShop.Services.Categories.Contracts;
 using SmallShop.Services.Goodss.Contracts;
 using SmallShop.Services.Goodss.Exceptions;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace SmallShop.Services.Goodss
 {

@@ -10,10 +10,7 @@ using SmallShop.Services.Categories.Exceptions;
 using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 

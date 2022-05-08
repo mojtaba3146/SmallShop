@@ -12,11 +12,7 @@ using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
 using SmallShop.Test.Tools.SaleInvoices;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -50,10 +46,7 @@ namespace SmallShop.Specs.SaleInvoices
         [Given("کالایی به نام 'ماست رامک' و قیمت '500' و کد کالای '10' و موجودی '5' در دسته 'لبنیات' وجود دارد ")]
         public void Given()
         {
-            _category = CategoryFactory.CreateCategory("لبنیات");
-            _dataContext.Manipulate(_ => _.Categories.Add(_category));
-            _goods = GoodsFactory.CreateGoodsWithCategory(_category.Id);
-            _dataContext.Manipulate(_ => _.Goodss.Add(_goods));
+            CreateGoods();
         }
 
         [And("هیچ سند خروج کالایی در لیست سند خروج کالا وجود ندارد")]
@@ -97,6 +90,14 @@ namespace SmallShop.Specs.SaleInvoices
             When();
             Then();
             ThenAnd();
+        }
+
+        private void CreateGoods()
+        {
+            _category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(_category));
+            _goods = GoodsFactory.CreateGoodsWithCategory(_category.Id);
+            _dataContext.Manipulate(_ => _.Goodss.Add(_goods));
         }
     }
 }

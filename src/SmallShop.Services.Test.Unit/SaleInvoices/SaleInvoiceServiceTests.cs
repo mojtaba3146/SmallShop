@@ -16,10 +16,6 @@ using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
 using SmallShop.Test.Tools.SaleInvoices;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace SmallShop.Services.Test.Unit.SaleInvoices
@@ -33,6 +29,7 @@ namespace SmallShop.Services.Test.Unit.SaleInvoices
         private readonly GoodsRepository _goodsRepository;
         private readonly CategoryRepository _categoryRepository;
         private SaleInvoice _saleInvoice;
+        private Category _category;
         private Goods _goods;
 
         public SaleInvoiceServiceTests()
@@ -50,13 +47,9 @@ namespace SmallShop.Services.Test.Unit.SaleInvoices
         [Fact]
         public void Add_adds_saleInvoice_properly()
         {
-            var category = CategoryFactory.CreateCategory("لبنیات");
-            _dataContext.Manipulate(_ => _.Categories.Add(category));
-            var goods = GoodsFactory.CreateGoodsWithCategory(category.Id);
-            _dataContext.Manipulate(_ => _.Goodss.Add(goods));
+            CreateCategoryWithGoods();
             AddSaleInvoiceDto dto = SaleInvoiceFactory.
-                CreateAddSaleInvoiceDto(goods.GoodsCode);
-                
+                CreateAddSaleInvoiceDto(_goods.GoodsCode);
 
             _sut.Add(dto);
 
@@ -150,14 +143,19 @@ namespace SmallShop.Services.Test.Unit.SaleInvoices
 
         private void CreateSaleInvoice()
         {
-            var category = CategoryFactory.CreateCategory("لبنیات");
-            _dataContext.Manipulate(_ => _.Categories.Add(category));
-            _goods = GoodsFactory.CreateGoodsWithCategory(category.Id);
-            _dataContext.Manipulate(_ => _.Goodss.Add(_goods));
+            CreateCategoryWithGoods();
             _saleInvoice = SaleInvoiceFactory.
                 CreateSaleInvoice(_goods.GoodsCode);
             _dataContext.Manipulate(_ => _
             .SaleInvoices.Add(_saleInvoice));
+        }
+
+        private void CreateCategoryWithGoods()
+        {
+            _category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(_category));
+            _goods = GoodsFactory.CreateGoodsWithCategory(_category.Id);
+            _dataContext.Manipulate(_ => _.Goodss.Add(_goods));
         }
     }
 }

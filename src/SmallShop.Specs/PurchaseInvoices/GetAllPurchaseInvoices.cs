@@ -12,11 +12,7 @@ using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
 using SmallShop.Test.Tools.PurchaseInvoices;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -48,14 +44,7 @@ namespace SmallShop.Specs.PurchaseInvoices
         [Given("سند ورود کالایی با کد فاکتور ‘1’ و کد کالای ‘10’ و تاریخ '1401' و تعداد کالای ‘20’ و قیمت ‘400’ و نام فروشنده ‘سپهر’ در سیستم وجود دارد")]
         public void Given()
         {
-            var category = CategoryFactory.CreateCategory("لبنیات");
-            _dataContext.Manipulate(_ => _.Categories.Add(category));
-            var goods = GoodsFactory.CreateGoodsWithCategory(category.Id);
-            _dataContext.Manipulate(_ => _.Goodss.Add(goods));
-            _purchaseInvoice = PurchaseInvoiceFactory.
-                CreatePurchaseInvoice(goods.GoodsCode);
-            _dataContext.Manipulate(_ => _
-            .PurchaseInvoices.Add(_purchaseInvoice));
+            CreatePurchaseInvoice();
         }
 
         [When("درخواست مشاهده سند ورود کالا ها را می دهم")]
@@ -88,6 +77,18 @@ namespace SmallShop.Specs.PurchaseInvoices
             Given();
             When();
             Then();
+        }
+
+        private void CreatePurchaseInvoice()
+        {
+            var category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(category));
+            var goods = GoodsFactory.CreateGoodsWithCategory(category.Id);
+            _dataContext.Manipulate(_ => _.Goodss.Add(goods));
+            _purchaseInvoice = PurchaseInvoiceFactory.
+                CreatePurchaseInvoice(goods.GoodsCode);
+            _dataContext.Manipulate(_ => _
+            .PurchaseInvoices.Add(_purchaseInvoice));
         }
     }
 }

@@ -13,10 +13,7 @@ using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -54,10 +51,11 @@ namespace SmallShop.Specs.Goodss
             _dataContext.Manipulate(_ => _.Categories.Add(_category));
         }
 
-        [And("کالایی به نام 'ماست رامک' و قیمت '500' و کد کالای '10' و حداقل موجودی '20' و حداکثر موجودی '40' در دسته 'لبنیات' وجود دارد")]
+        [And("کالایی به نام 'ماست رامک' و قیمت '500' و کد کالای '20' و حداقل موجودی '20' و حداکثر موجودی '40' در دسته 'لبنیات' وجود دارد")]
         public void GivenAnd()
         {
-            var goods = GoodsFactory.CreateGoodsWithCategory(_category.Id);
+            var goods = new GoodsBuilder(_category.Id)
+                .WithGoodsCode(20).Build();
             _dataContext.Manipulate(_ => _.Goodss.Add(goods));
         }
 

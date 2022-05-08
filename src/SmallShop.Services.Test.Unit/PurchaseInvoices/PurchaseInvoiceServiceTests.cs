@@ -16,10 +16,6 @@ using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
 using SmallShop.Test.Tools.PurchaseInvoices;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace SmallShop.Services.Test.Unit.PurchaseInvoices
@@ -33,6 +29,8 @@ namespace SmallShop.Services.Test.Unit.PurchaseInvoices
         private readonly GoodsRepository _goodsRepository;
         private readonly CategoryRepository _categoryRepository;
         private PurchaseInvoice _purchaseInvoice;
+        private Category _category;
+        private Goods _goods;
 
         public PurchaseInvoiceServiceTests()
         {
@@ -49,17 +47,14 @@ namespace SmallShop.Services.Test.Unit.PurchaseInvoices
         [Fact]
         public void Add_adds_purchaseInvoice_properly()
         {
-            var category = CategoryFactory.CreateCategory("لبنیات");
-            _dataContext.Manipulate(_ => _.Categories.Add(category));
-            var goods = GoodsFactory.CreateGoodsWithCategory(category.Id);
-            _dataContext.Manipulate(_ => _.Goodss.Add(goods));
+            CreateCategoryWithGoods();
             AddPurchaseInvoiceDto dto = PurchaseInvoiceFactory.
-                CreateAddPurchaseInvoiceDto(goods.GoodsCode);
+                CreateAddPurchaseInvoiceDto(_goods.GoodsCode);
 
             _sut.Add(dto);
 
             _dataContext.PurchaseInvoices.Should()
-                .Contain(x=>x.InvoiceNum==dto.InvoiceNum);
+                .Contain(x => x.InvoiceNum == dto.InvoiceNum);
             _dataContext.PurchaseInvoices.Should()
                 .Contain(x => x.SellerName == dto.SellerName);
             _dataContext.PurchaseInvoices.Should()
@@ -148,14 +143,19 @@ namespace SmallShop.Services.Test.Unit.PurchaseInvoices
 
         private void CreatePurchaseInvoice()
         {
-            var category = CategoryFactory.CreateCategory("لبنیات");
-            _dataContext.Manipulate(_ => _.Categories.Add(category));
-            var goods = GoodsFactory.CreateGoodsWithCategory(category.Id);
-            _dataContext.Manipulate(_ => _.Goodss.Add(goods));
+            CreateCategoryWithGoods();
             _purchaseInvoice = PurchaseInvoiceFactory.
-                CreatePurchaseInvoice(goods.GoodsCode);
+                CreatePurchaseInvoice(_goods.GoodsCode);
             _dataContext.Manipulate(_ => _
             .PurchaseInvoices.Add(_purchaseInvoice));
+        }
+
+        private void CreateCategoryWithGoods()
+        {
+            _category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(_category));
+            _goods = GoodsFactory.CreateGoodsWithCategory(_category.Id);
+            _dataContext.Manipulate(_ => _.Goodss.Add(_goods));
         }
     }
 }

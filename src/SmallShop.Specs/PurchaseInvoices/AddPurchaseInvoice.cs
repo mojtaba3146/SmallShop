@@ -5,7 +5,6 @@ using SmallShop.Infrastructure.Test;
 using SmallShop.Persistence.EF;
 using SmallShop.Persistence.EF.Goodss;
 using SmallShop.Persistence.EF.PurchaseInvoices;
-using SmallShop.Services.Categories.Contracts;
 using SmallShop.Services.Goodss.Contracts;
 using SmallShop.Services.PurchaseInvoices;
 using SmallShop.Services.PurchaseInvoices.Contracts;
@@ -13,11 +12,7 @@ using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
 using SmallShop.Test.Tools.PurchaseInvoices;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -51,10 +46,7 @@ namespace SmallShop.Specs.PurchaseInvoices
         [Given("کالایی به نام 'ماست رامک' و قیمت '500' و کد کالای '10' و حداقل موجودی '20' و حداکثر موجودی '40' در دسته 'لبنیات' وجود دارد ")]
         public void Given()
         {
-            _category = CategoryFactory.CreateCategory("لبنیات");
-            _dataContext.Manipulate(_ => _.Categories.Add(_category));
-            _goods = GoodsFactory.CreateGoodsWithCategory(_category.Id);
-            _dataContext.Manipulate(_ => _.Goodss.Add(_goods)); 
+            CreateGoods();
         }
 
         [And("هیچ سند ورود کالایی در لیست سند ورود کالا وجود ندارد")]
@@ -97,6 +89,14 @@ namespace SmallShop.Specs.PurchaseInvoices
             When();
             Then();
             ThenAnd();
+        }
+
+        private void CreateGoods()
+        {
+            _category = CategoryFactory.CreateCategory("لبنیات");
+            _dataContext.Manipulate(_ => _.Categories.Add(_category));
+            _goods = GoodsFactory.CreateGoodsWithCategory(_category.Id);
+            _dataContext.Manipulate(_ => _.Goodss.Add(_goods));
         }
     }
 }

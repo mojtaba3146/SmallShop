@@ -12,11 +12,7 @@ using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
 using SmallShop.Test.Tools.SaleInvoices;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -83,7 +79,6 @@ namespace SmallShop.Specs.SaleInvoices
             When();
             Then();
         }
-
 
         private void CreateSaleInvoice()
         {

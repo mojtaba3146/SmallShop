@@ -10,10 +10,6 @@ using SmallShop.Services.Categories.Exceptions;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace SmallShop.Services.Test.Unit.Categories
@@ -24,6 +20,7 @@ namespace SmallShop.Services.Test.Unit.Categories
         private readonly UnitOfWork _unitOfWork;
         private readonly CategoryService _sut;
         private readonly CategoryRepository _repository;
+        private Category _category;
 
         public CategoryServiceTests()
         {
@@ -48,23 +45,21 @@ namespace SmallShop.Services.Test.Unit.Categories
         [Fact]
         public void Add_throw_TitleAlreadyExistException_when_given_title_alreadyExist()
         {
-            var category = CategoryFactory.CreateCategory("لبنیات");
-            _dataContext.Manipulate(_=>_.Categories.Add(category));
+            CreateCategory("لبنیات");
             AddCategoryDto dto = CategoryFactory.CreateAddCategoryDto("لبنیات");
 
-            Action expected= () => _sut.Add(dto);
+            Action expected = () => _sut.Add(dto);
 
             expected.Should().ThrowExactly<TitleAlreadyExistException>();
         }
-
+    
         [Fact]
         public void Update_update_category_properly()
         {
-            var category = CategoryFactory.CreateCategory("لبنیات");
-            _dataContext.Manipulate(_ => _.Categories.Add(category));
+            CreateCategory("لبنیات");
             var dto = CategoryFactory.CreateUpdateCategoryDto("خشکبار");
 
-            _sut.Update(category.Id, dto);
+            _sut.Update(_category.Id, dto);
 
             _dataContext.Categories.Should()
                 .Contain(x => x.Title == dto.Title);
@@ -73,13 +68,11 @@ namespace SmallShop.Services.Test.Unit.Categories
         [Fact]
         public void Update_throw_TitleAlreadyExistException_when_given_title_alreadyExist()
         {
-            var category = CategoryFactory.CreateCategory("لبنیات");
-            _dataContext.Manipulate(_ => _.Categories.Add(category));
-            var secondCategory = CategoryFactory.CreateCategory("خشکبار");
-            _dataContext.Manipulate(_ => _.Categories.Add(secondCategory));
+            CreateCategory("لبنیات");
+            CreateCategory("خشکبار");
             var dto = CategoryFactory.CreateUpdateCategoryDto("خشکبار");
 
-            Action expected = () => _sut.Update(category.Id, dto);
+            Action expected = () => _sut.Update(_category.Id, dto);
 
             expected.Should().ThrowExactly<TitleAlreadyExistException>();
         }
@@ -98,25 +91,23 @@ namespace SmallShop.Services.Test.Unit.Categories
         [Fact]
         public void GetAll_return_all_categories_properly()
         {
-            var category = CategoryFactory.CreateCategory("لبنیات");
-            _dataContext.Manipulate(_ => _.Categories.Add(category));
+            CreateCategory("لبنیات");
 
             var expected=_sut.GetAll();
 
             expected.Should().HaveCount(1);
-            expected.Should().Contain(_=>_.Title==category.Title);
+            expected.Should().Contain(_=>_.Title==_category.Title);
         }
 
         [Fact]
         public void Delete_delete_category_properly()
         {
-            var category = CategoryFactory.CreateCategory("لبنیات");
-            _dataContext.Manipulate(_ => _.Categories.Add(category));
+            CreateCategory("لبنیات");
 
-            _sut.Delete(category.Id);
+            _sut.Delete(_category.Id);
 
             _dataContext.Categories.Should()
-                .NotContain(_=>_.Title==category.Title);
+                .NotContain(_=>_.Title==_category.Title);
         }
 
         [Theory]
@@ -131,14 +122,24 @@ namespace SmallShop.Services.Test.Unit.Categories
         [Fact]
         public void Delete_throw_GoodsExistInCategoryException_when_goods_exist_in_category()
         {
-            var category = CategoryFactory.CreateCategory("لبنیات");
-            _dataContext.Manipulate(_ => _.Categories.Add(category));
-            var goods = GoodsFactory.CreateGoodsWithCategory(category.Id);
-            _dataContext.Manipulate(_ => _.Goodss.Add(goods));
+            CreateCategory("لبنیات");
+            CreateGoods();
 
-            Action expected = () => _sut.Delete(category.Id);
+            Action expected = () => _sut.Delete(_category.Id);
 
             expected.Should().ThrowExactly<GoodsExistInCategoryException>();
+        }
+
+
+        private void CreateCategory(string categoryTitle)
+        {
+            _category = CategoryFactory.CreateCategory(categoryTitle);
+            _dataContext.Manipulate(_ => _.Categories.Add(_category));
+        }
+        private void CreateGoods()
+        {
+            var goods = GoodsFactory.CreateGoodsWithCategory(_category.Id);
+            _dataContext.Manipulate(_ => _.Goodss.Add(goods));
         }
 
     }
