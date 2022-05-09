@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using SmallShop.Entities;
+﻿using Microsoft.AspNetCore.Mvc;
 using SmallShop.Services.Goodss.Contracts;
 using System.Collections.Generic;
 
@@ -57,6 +55,12 @@ namespace SmallShop.RestApi.Controllers
         public List<GetAllGoodsWithMaxInvenDto> GetMaxInventory()
         {
             return _service.GetAllMaxInventory();
+        }
+
+        [HttpGet("/maxsellincategory")]
+        public List<GetmaxSellerGoodsDto> GetBestSellerInEachCategory()
+        {
+            return _service.GetBestSellerGoodsInEchCategory();
         }
     }
 }

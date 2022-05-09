@@ -17,5 +17,6 @@ namespace SmallShop.Services.Goodss.Contracts
         GetmaxSellerGoodsDto GetBestSellerGoods();
         List<GetAllGoodsWithMinInvenDto> GetAllMinInventory();
         List<GetAllGoodsWithMaxInvenDto> GetAllMaxInventory();
+        List<GetmaxSellerGoodsDto> GetBestSellerGoodsInEchCategory();
     }
 }

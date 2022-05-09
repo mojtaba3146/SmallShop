@@ -1,10 +1,7 @@
 ﻿using SmallShop.Entities;
 using SmallShop.Services.Goodss.Contracts;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmallShop.Persistence.EF.Goodss
 {
@@ -60,6 +57,27 @@ namespace SmallShop.Persistence.EF.Goodss
                     Name = x.Name,
                     GoodsCode = x.GoodsCode,
                 }).ToList();
+        }
+
+        public List<GetmaxSellerGoodsDto> GetBestSellerGoodsInEchCategory()
+        {
+           List<int> categoryId = new List<int>();
+            List<GetmaxSellerGoodsDto> goods = new List<GetmaxSellerGoodsDto>();
+            var ids = _dbContext.Categories.Select(x => x.Id);
+            categoryId.AddRange(ids);
+
+            foreach (var id in categoryId)
+            {
+                var gods = _dbContext.Goodss.Where(x => x.CategoryId == id);
+                goods.Add(gods.OrderByDescending(x => x.SellCount).Select(x =>
+                      new GetmaxSellerGoodsDto
+                      {
+                          Name = x.Name,
+                          GoodsCode = x.GoodsCode,
+                          CategoryId = id,
+                      }).FirstOrDefault());
+            }  
+            return goods;
         }
 
         public GetmaxSellerGoodsDto GetBestSellerGoods()

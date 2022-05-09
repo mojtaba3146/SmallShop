@@ -1,10 +1,7 @@
 ﻿using SmallShop.Entities;
 using SmallShop.Services.PurchaseInvoices.Contracts;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmallShop.Persistence.EF.PurchaseInvoices
 {

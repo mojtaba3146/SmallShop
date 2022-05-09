@@ -12,6 +12,7 @@ using SmallShop.Services.Goodss.Exceptions;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
 using System;
+using System.Linq;
 using Xunit;
 
 namespace SmallShop.Services.Test.Unit.Goodss
@@ -40,7 +41,7 @@ namespace SmallShop.Services.Test.Unit.Goodss
         [Fact]
         public void Add_adds_goods_properly()
         {
-            CreateCategory();
+            CreateCategory("لبنیات");
             AddGoodsDto dto = GoodsFactory.CreateAddGoodsDto(_category.Id);
 
             _sut.Add(dto);
@@ -62,7 +63,7 @@ namespace SmallShop.Services.Test.Unit.Goodss
         [Fact]
         public void Add_throws_GoodsNameIsDuplicatedException_when_goods_name_already_exists_in_category()
         {
-            CreateCategory();
+            CreateCategory("لبنیات");
             CreateGoods();
             AddGoodsDto dto = GoodsFactory.CreateAddGoodsDto(_category.Id);
 
@@ -86,7 +87,7 @@ namespace SmallShop.Services.Test.Unit.Goodss
         [Fact]
         public void GetAll_return_all_goods()
         {
-            CreateCategory();
+            CreateCategory("لبنیات");
             CreateGoods();
 
             var expected = _sut.GetAll();
@@ -103,7 +104,7 @@ namespace SmallShop.Services.Test.Unit.Goodss
         [Fact]
         public void Update_update_goods_properly()
         {
-            CreateCategory();
+            CreateCategory("لبنیات");
             CreateGoods();
             var dto = GoodsFactory.CreateUpdateGoodsDto(_category.Id);
 
@@ -132,7 +133,7 @@ namespace SmallShop.Services.Test.Unit.Goodss
         [InlineData(40, 20)]
         public void Update_throw_CategoryNotFoundException_when_category_with_given_id_not_exists(int fakeCategoryId, int categoryID)
         {
-            CreateCategory();
+            CreateCategory("لبنیات");
             CreateGoods();
             var dto = GoodsFactory.CreateUpdateGoodsDto(_category.Id);
             dto.CategoryId = fakeCategoryId;
@@ -145,7 +146,7 @@ namespace SmallShop.Services.Test.Unit.Goodss
         [Fact]
         public void Update_throws_GoodsNameIsDuplicatedException_when_goods_name_already_exists_in_category()
         {
-            CreateCategory();
+            CreateCategory("لبنیات");
             CreateGoods();
             CreateSecondGoods();
             UpdateGoodsDto dto = GoodsFactory.CreateUpdateGoods(_category.Id);
@@ -158,7 +159,7 @@ namespace SmallShop.Services.Test.Unit.Goodss
         [Fact]
         public void Delete_delete_goods_properly()
         {
-            CreateCategory();
+            CreateCategory("لبنیات");
             CreateGoods();
 
             _sut.Delete(_goods.GoodsCode);
@@ -179,7 +180,7 @@ namespace SmallShop.Services.Test.Unit.Goodss
         [Fact]
         public void GetBestSellerGoods_return_goods_that_sellNum_is_max()
         {
-            CreateCategory();
+            CreateCategory("لبنیات");
             CreateTwoGoods();
 
             var expected = _sut.GetBestSellerGoods();
@@ -189,9 +190,24 @@ namespace SmallShop.Services.Test.Unit.Goodss
         }
 
         [Fact]
+        public void GetBestSellerGoodsInEchCategory_return_goods_that_sellNum_is_max_in_each_category()
+        {
+            CreateCategory("لبنیات");
+            CreateCategory("نوشیدنی");
+            CreateTwoGoodsWithDiffrentCategory();
+
+            var expected = _sut.GetBestSellerGoodsInEchCategory();
+
+            expected.Should().Contain(_ => _.Name == _goods.Name);
+            expected.Should().Contain(_ => _.GoodsCode == _goods.GoodsCode);
+            expected.Should().Contain(_ => _.Name == _goodsTwo.Name);
+            expected.Should().Contain(_ => _.GoodsCode == _goodsTwo.GoodsCode);
+        }
+
+        [Fact]
         public void GetAllMinInventory_return_goods_with_goodsInventory_less_than_minInventory()
         {
-            CreateCategory();
+            CreateCategory("لبنیات");
             _goods = new GoodsBuilder(_category.Id)
                 .WithGoodsInventory(15).Build();
             _dataContext.Manipulate(_ => _.Goodss.Add(_goods));
@@ -207,7 +223,7 @@ namespace SmallShop.Services.Test.Unit.Goodss
         [Fact]
         public void GetAllMaxInventory_return_goods_with_goodsInventory_more_than_maxInventory()
         {
-            CreateCategory();
+            CreateCategory("لبنیات");
             _goods = new GoodsBuilder(_category.Id)
                 .WithGoodsInventory(40).Build();
             _dataContext.Manipulate(_ => _.Goodss.Add(_goods));
@@ -220,9 +236,9 @@ namespace SmallShop.Services.Test.Unit.Goodss
             expected.Should().Contain(_ => _.CategoryId == _goods.CategoryId);
         }
 
-        private void CreateCategory()
+        private void CreateCategory(string title)
         {
-            _category = CategoryFactory.CreateCategory("لبنیات");
+            _category = CategoryFactory.CreateCategory(title);
             _dataContext.Manipulate(_ => _.Categories.Add(_category));
         }
 
@@ -246,6 +262,23 @@ namespace SmallShop.Services.Test.Unit.Goodss
             _goodsTwo = new GoodsBuilder(_category.Id).WithName("ماست میهن")
                 .WithGoodsCode(20).WithGoodsInventory(22)
                 .WithSellCount(11).Build();
+            _dataContext.Manipulate(_ => _.Goodss.Add(_goodsTwo));
+        }
+
+        private void CreateTwoGoodsWithDiffrentCategory()
+        {
+            var categoryIdLabaniat = _dataContext.Categories
+                .Where(x => x.Title == "لبنیات")
+                .Select(x => x.Id).First();
+            var categoryIdNoshidani = _dataContext.Categories
+                .Where(x => x.Title == "نوشیدنی")
+                .Select(x => x.Id).First();
+            _goods = new GoodsBuilder(categoryIdLabaniat).WithSellCount(5)
+               .WithGoodsInventory(21).Build();
+            _dataContext.Manipulate(_ => _.Goodss.Add(_goods));
+            _goodsTwo = new GoodsBuilder(categoryIdNoshidani).WithGoodsCode(12)
+                .WithSellCount(15).WithName("نوشابه کولا")
+                .WithGoodsInventory(21).Build();
             _dataContext.Manipulate(_ => _.Goodss.Add(_goodsTwo));
         }
     }

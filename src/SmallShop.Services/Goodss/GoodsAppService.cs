@@ -89,6 +89,11 @@ namespace SmallShop.Services.Goodss
             return _repository.GetBestSellerGoods();
         }
 
+        public List<GetmaxSellerGoodsDto> GetBestSellerGoodsInEchCategory()
+        {
+            return _repository.GetBestSellerGoodsInEchCategory();
+        }
+
         public void Update(int goodsCode, UpdateGoodsDto dto)
         {
             Goods goods = _repository.GetById(goodsCode);
