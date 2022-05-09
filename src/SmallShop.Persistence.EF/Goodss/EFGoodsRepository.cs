@@ -39,7 +39,8 @@ namespace SmallShop.Persistence.EF.Goodss
 
         public List<GetAllGoodsWithMaxInvenDto> GetAllMaxInventory()
         {
-            return _dbContext.Goodss.Where(x => x.GoodsInventory >= x.MaxInventory)
+            return _dbContext.Goodss
+                .Where(x => x.GoodsInventory >= x.MaxInventory)
                  .Select(x => new GetAllGoodsWithMaxInvenDto
                  {
                      CategoryId = x.CategoryId,
@@ -50,7 +51,8 @@ namespace SmallShop.Persistence.EF.Goodss
 
         public List<GetAllGoodsWithMinInvenDto> GetAllMinInventory()
         {
-            return _dbContext.Goodss.Where(x => x.GoodsInventory <= x.MinInventory)
+            return _dbContext.Goodss
+                .Where(x => x.GoodsInventory <= x.MinInventory)
                 .Select(x => new GetAllGoodsWithMinInvenDto
                 {
                     CategoryId = x.CategoryId,
@@ -62,14 +64,16 @@ namespace SmallShop.Persistence.EF.Goodss
         public List<GetmaxSellerGoodsDto> GetBestSellerGoodsInEchCategory()
         {
            List<int> categoryId = new List<int>();
-            List<GetmaxSellerGoodsDto> goods = new List<GetmaxSellerGoodsDto>();
+            List<GetmaxSellerGoodsDto> maxSellgoods = new 
+                List<GetmaxSellerGoodsDto>();
             var ids = _dbContext.Categories.Select(x => x.Id);
             categoryId.AddRange(ids);
 
             foreach (var id in categoryId)
             {
-                var gods = _dbContext.Goodss.Where(x => x.CategoryId == id);
-                goods.Add(gods.OrderByDescending(x => x.SellCount).Select(x =>
+                var goods = _dbContext.Goodss.Where(x => x.CategoryId == id);
+                maxSellgoods.Add(goods.OrderByDescending(x => x.SellCount)
+                    .Select(x =>
                       new GetmaxSellerGoodsDto
                       {
                           Name = x.Name,
@@ -77,13 +81,14 @@ namespace SmallShop.Persistence.EF.Goodss
                           CategoryId = id,
                       }).FirstOrDefault());
             }  
-            return goods;
+            return maxSellgoods;
         }
 
         public GetmaxSellerGoodsDto GetBestSellerGoods()
         {
             return (GetmaxSellerGoodsDto)_dbContext.Goodss.
-               OrderByDescending(x => x.SellCount).Select(x => new GetmaxSellerGoodsDto
+               OrderByDescending(x => x.SellCount)
+               .Select(x => new GetmaxSellerGoodsDto
                {
                    Name = x.Name,
                    GoodsCode = x.GoodsCode,

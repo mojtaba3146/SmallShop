@@ -21,7 +21,8 @@ namespace SmallShop.Persistence.EF.SaleInvoices
 
         public List<GetAllSaleInvoicesDto> GetAll()
         {
-            return _dbContext.SaleInvoices.Select(x => new GetAllSaleInvoicesDto
+            return _dbContext.SaleInvoices
+                .Select(x => new GetAllSaleInvoicesDto
             {
                 InvoiceNum = x.InvoiceNum,
                 Date = x.Date,
