@@ -1,10 +1,7 @@
 ﻿using FluentAssertions;
 using SmallShop.Entities;
-using SmallShop.Infrastructure.Application;
 using SmallShop.Infrastructure.Test;
 using SmallShop.Persistence.EF;
-using SmallShop.Persistence.EF.Categories;
-using SmallShop.Services.Categories;
 using SmallShop.Services.Categories.Contracts;
 using SmallShop.Services.Categories.Exceptions;
 using SmallShop.Test.Tools.Categories;
@@ -17,9 +14,7 @@ namespace SmallShop.Services.Test.Unit.Categories
     public class CategoryServiceTests
     {
         private readonly EFDataContext _dataContext;
-        private readonly UnitOfWork _unitOfWork;
         private readonly CategoryService _sut;
-        private readonly CategoryRepository _repository;
         private Category _category;
 
         public CategoryServiceTests()
@@ -27,9 +22,7 @@ namespace SmallShop.Services.Test.Unit.Categories
             _dataContext =
                 new EFInMemoryDatabase()
                 .CreateDataContext<EFDataContext>();
-            _unitOfWork = new EFUnitOfWork(_dataContext);
-            _repository = new EFCategoryRepository(_dataContext);
-            _sut = new CategoryAppService(_repository, _unitOfWork);
+            _sut = CategoryFactory.CreateService(_dataContext);
         }
 
         [Fact]

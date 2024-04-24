@@ -1,4 +1,8 @@
 ﻿using SmallShop.Entities;
+using SmallShop.Infrastructure.Test;
+using SmallShop.Persistence.EF;
+using SmallShop.Persistence.EF.Categories;
+using SmallShop.Services.Categories;
 using SmallShop.Services.Categories.Contracts;
 using System;
 using System.Collections.Generic;
@@ -32,6 +36,14 @@ namespace SmallShop.Test.Tools.Categories
             {
                 Title = title
             };
+        }
+
+        public static CategoryAppService CreateService(EFDataContext context)
+        {
+            var unitOfWork = new EFUnitOfWork(context);
+            var repository = new EFCategoryRepository(context);
+
+            return new CategoryAppService(repository, unitOfWork);
         }
     }
 }
