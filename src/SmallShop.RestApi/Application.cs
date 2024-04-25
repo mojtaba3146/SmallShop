@@ -1,9 +1,4 @@
 using Autofac;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Persistence.EF;
@@ -12,9 +7,9 @@ using SmallShop.Services.Categories;
 
 namespace SmallShop.RestApi
 {
-    public class Startup
+    public class Application
     {
-        public Startup(IConfiguration configuration)
+        public Application(IConfiguration configuration)
         {
             Configuration = configuration;
         }

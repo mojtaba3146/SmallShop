@@ -1,6 +1,4 @@
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 
 namespace SmallShop.RestApi
 {
@@ -16,7 +14,7 @@ namespace SmallShop.RestApi
             .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Application>();
                 });
     }
 }
