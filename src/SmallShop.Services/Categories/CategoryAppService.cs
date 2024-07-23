@@ -2,7 +2,6 @@
 using SmallShop.Infrastructure.Application;
 using SmallShop.Services.Categories.Contracts;
 using SmallShop.Services.Categories.Exceptions;
-using System.Collections.Generic;
 
 namespace SmallShop.Services.Categories
 {

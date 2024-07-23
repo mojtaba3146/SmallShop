@@ -1,7 +1,5 @@
 ﻿using SmallShop.Entities;
 using SmallShop.Services.Goodss.Contracts;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SmallShop.Persistence.EF.Goodss
 {
@@ -63,30 +61,35 @@ namespace SmallShop.Persistence.EF.Goodss
 
         public List<GetmaxSellerGoodsDto> GetBestSellerGoodsInEchCategory()
         {
-           List<int> categoryId = new List<int>();
-            List<GetmaxSellerGoodsDto> maxSellgoods = new 
-                List<GetmaxSellerGoodsDto>();
-            var ids = _dbContext.Categories.Select(x => x.Id);
-            categoryId.AddRange(ids);
+            var maxSellGoods = new List<GetmaxSellerGoodsDto>();
 
-            foreach (var id in categoryId)
+            var categoryIds = _dbContext.Categories.Select(x => x.Id).ToList();
+
+            foreach (var categoryId in categoryIds)
             {
-                var goods = _dbContext.Goodss.Where(x => x.CategoryId == id);
-                maxSellgoods.Add(goods.OrderByDescending(x => x.SellCount)
-                    .Select(x =>
-                      new GetmaxSellerGoodsDto
-                      {
-                          Name = x.Name,
-                          GoodsCode = x.GoodsCode,
-                          CategoryId = id,
-                      }).FirstOrDefault());
-            }  
-            return maxSellgoods;
+                var bestSeller = _dbContext.Goodss
+                    .Where(x => x.CategoryId == categoryId)
+                    .OrderByDescending(x => x.SellCount)
+                    .Select(x => new GetmaxSellerGoodsDto
+                    {
+                        Name = x.Name,
+                        GoodsCode = x.GoodsCode,
+                        CategoryId = categoryId,
+                    })
+                    .FirstOrDefault();
+
+                if (bestSeller != null)
+                {
+                    maxSellGoods.Add(bestSeller);
+                }
+            }
+
+            return maxSellGoods;
         }
 
-        public GetmaxSellerGoodsDto GetBestSellerGoods()
+        public GetmaxSellerGoodsDto? GetBestSellerGoods()
         {
-            return (GetmaxSellerGoodsDto)_dbContext.Goodss.
+            return _dbContext.Goodss.
                OrderByDescending(x => x.SellCount)
                .Select(x => new GetmaxSellerGoodsDto
                {
@@ -96,7 +99,7 @@ namespace SmallShop.Persistence.EF.Goodss
                }).FirstOrDefault();
         }
 
-        public Goods GetById(int goodsCode)
+        public Goods? GetById(int goodsCode)
         {
             return _dbContext.Goodss.
                 FirstOrDefault(_ => _.GoodsCode == goodsCode);

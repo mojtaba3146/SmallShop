@@ -1,7 +1,5 @@
 ﻿using SmallShop.Entities;
 using SmallShop.Services.Categories.Contracts;
-using System.Collections.Generic;
-using System.Linq;
 
 
 namespace SmallShop.Persistence.EF.Categories
@@ -33,7 +31,7 @@ namespace SmallShop.Persistence.EF.Categories
             }).ToList();
         }
 
-        public Category GetById(int id)
+        public Category? GetById(int id)
         {
             return _dbContext.Categories.
                 FirstOrDefault(c => c.Id == id);
