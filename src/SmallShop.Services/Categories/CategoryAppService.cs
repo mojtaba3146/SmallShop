@@ -34,6 +34,25 @@ namespace SmallShop.Services.Categories
             _unitOfWork.Commit();
         }
 
+        public int AddSeed(AddCategoryDto dto)
+        {
+            var isTitleExist = _repository.ISExistTitle(dto.Title);
+
+            if (!isTitleExist)
+            {
+                var category = new Category();
+                category.Title = dto.Title;
+
+                _repository.Add(category);
+                _unitOfWork.Commit();
+
+                return category.Id;
+            }
+
+            var categoryId = _repository.GetIdByTitle(dto.Title);
+            return categoryId;
+        }
+
         public void Delete(int id)
         {
             var category= _repository.GetById(id);

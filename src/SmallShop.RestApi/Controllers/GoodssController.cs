@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmallShop.Services.Goodss.Contracts;
-using System.Collections.Generic;
 
 namespace SmallShop.RestApi.Controllers
 {

@@ -3,7 +3,6 @@ using SmallShop.Infrastructure.Application;
 using SmallShop.Services.Categories.Contracts;
 using SmallShop.Services.Goodss.Contracts;
 using SmallShop.Services.Goodss.Exceptions;
-using System.Collections.Generic;
 
 
 namespace SmallShop.Services.Goodss
@@ -53,6 +52,37 @@ namespace SmallShop.Services.Goodss
 
             _repository.Add(goods);
             _unitOfWork.Commit();
+        }
+
+        public void AddFirstSeed(AddGoodsDto dto)
+        {
+            var isSeedDataExist = _repository.IsExistGoodsName(dto.Name
+               , dto.CategoryId);
+
+            if (!isSeedDataExist)
+            {
+                var isCategoryExist = _categoryRepository
+                .IsCategoryExistById(dto.CategoryId);
+
+                if (!isCategoryExist)
+                {
+                    throw new CategoryNotFoundException();
+                }
+
+                var goods = new Goods
+                {
+                    GoodsCode = dto.GoodsCode,
+                    Name = dto.Name,
+                    Price = dto.Price,
+                    MinInventory = dto.MinInventory,
+                    MaxInventory = dto.MaxInventory,
+                    CategoryId = dto.CategoryId,
+                };
+
+                _repository.Add(goods);
+                _unitOfWork.Commit();
+            }
+
         }
 
         public void Delete(int goodsCode)

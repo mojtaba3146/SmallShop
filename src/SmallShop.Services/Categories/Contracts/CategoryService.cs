@@ -1,9 +1,4 @@
 ﻿using SmallShop.Infrastructure.Application;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmallShop.Services.Categories.Contracts
 {
@@ -13,5 +8,6 @@ namespace SmallShop.Services.Categories.Contracts
         void Update(int id,UpdateCategoryDto dto);
         List<GetAllCategoryDto> GetAll();
         void Delete(int id);
+        int AddSeed(AddCategoryDto dto);
     }
 }

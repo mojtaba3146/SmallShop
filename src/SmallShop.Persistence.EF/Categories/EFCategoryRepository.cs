@@ -37,6 +37,13 @@ namespace SmallShop.Persistence.EF.Categories
                 FirstOrDefault(c => c.Id == id);
         }
 
+        public int GetIdByTitle(string title)
+        {
+            return _dbContext.Categories
+                .Where(x => x.Title == title)
+                .Select(i => i.Id).FirstOrDefault();
+        }
+
         public bool IsCategoryExistById(int categoryId)
         {
             return _dbContext.Categories.Any(

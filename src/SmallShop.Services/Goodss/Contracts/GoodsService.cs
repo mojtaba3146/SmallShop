@@ -1,10 +1,4 @@
-﻿using SmallShop.Entities;
-using SmallShop.Infrastructure.Application;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SmallShop.Infrastructure.Application;
 
 namespace SmallShop.Services.Goodss.Contracts
 {
@@ -18,5 +12,6 @@ namespace SmallShop.Services.Goodss.Contracts
         List<GetAllGoodsWithMinInvenDto> GetAllMinInventory();
         List<GetAllGoodsWithMaxInvenDto> GetAllMaxInventory();
         List<GetmaxSellerGoodsDto> GetBestSellerGoodsInEchCategory();
+        void AddFirstSeed(AddGoodsDto dto);
     }
 }

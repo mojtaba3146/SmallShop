@@ -1,4 +1,5 @@
 using Autofac.Extensions.DependencyInjection;
+using SmallShop.RestApi.Configs.BackgroundServices;
 
 namespace SmallShop.RestApi
 {
