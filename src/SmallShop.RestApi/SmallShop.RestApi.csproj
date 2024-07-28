@@ -7,9 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="Autofac" Version="6.3.0" />
-	<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.3.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+	<PackageReference Include="Autofac" Version="8.0.0" />
+	<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="9.0.0" />
+  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="*" />
+  <PackageReference Include="AspNetCore.HealthChecks.UI" Version="*" />
+  <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="*" />
   </ItemGroup>
 
   <ItemGroup>

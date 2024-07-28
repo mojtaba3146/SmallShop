@@ -1,4 +1,6 @@
 using Autofac;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Persistence.EF;
@@ -50,6 +52,10 @@ namespace SmallShop.RestApi
             });
 
             services.AddHostedService<SeedDataGoods>();
+
+            services.AddHealthChecks()
+                .AddSqlServer(Configuration["ConnectionString"]!);
+                
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,6 +73,15 @@ namespace SmallShop.RestApi
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseRouting().UseEndpoints(config =>
+            {
+                config.MapHealthChecks("/health/check", new HealthCheckOptions
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+            });
 
             app.UseEndpoints(endpoints =>
             {
