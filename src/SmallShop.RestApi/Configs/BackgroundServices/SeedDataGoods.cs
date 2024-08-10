@@ -20,7 +20,6 @@ namespace SmallShop.RestApi.Configs.BackgroundServices
         }
         public Task StartAsync(CancellationToken cancellationToken)
         {
-
             var categoryId = _categoryService.AddSeed(new AddCategoryDto
             {
                 Title = _configuration.GetSection("Category:Title").Value!
