@@ -2,6 +2,7 @@ using Autofac;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
+using SmallShop.Entities;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Persistence.EF;
 using SmallShop.Persistence.EF.Categories;
@@ -55,7 +56,9 @@ namespace SmallShop.RestApi
 
             services.AddHealthChecks()
                 .AddSqlServer(Configuration["ConnectionString"]!);
-                
+
+            services.Configure<Category>(Configuration.GetSection("Category"));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

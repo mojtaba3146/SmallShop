@@ -23,7 +23,7 @@ namespace SmallShop.Services.Categories
             var category = new Category();
             category.Title = dto.Title;
 
-            var isTitleExist=_repository.ISExistTitle(dto.Title);
+            var isTitleExist = _repository.ISExistTitle(dto.Title);
 
             if (isTitleExist)
             {
@@ -36,28 +36,30 @@ namespace SmallShop.Services.Categories
 
         public int AddSeed(AddCategoryDto dto)
         {
-            var isTitleExist = _repository.ISExistTitle(dto.Title);
+            var categoryId = _repository.GetIdByTitle(dto.Title);
 
-            if (!isTitleExist)
+            if (categoryId != null)
             {
-                var category = new Category();
-                category.Title = dto.Title;
-
-                _repository.Add(category);
-                _unitOfWork.Commit();
-
-                return category.Id;
+                return categoryId.Value;
             }
 
-            var categoryId = _repository.GetIdByTitle(dto.Title);
-            return categoryId;
+            var category = new Category
+            {
+                Title = dto.Title
+            };
+
+            _repository.Add(category);
+            _unitOfWork.Commit();
+
+            return category.Id;
+
         }
 
         public void Delete(int id)
         {
-            var category= _repository.GetById(id);
+            var category = _repository.GetById(id);
 
-            if (category==null)
+            if (category == null)
             {
                 throw new CategoryWithGivenIdDoesNotExist();
             }
@@ -78,11 +80,11 @@ namespace SmallShop.Services.Categories
             return _repository.GetAll();
         }
 
-        public void Update(int id,UpdateCategoryDto dto)
+        public void Update(int id, UpdateCategoryDto dto)
         {
-            var category= _repository.GetById(id);
+            var category = _repository.GetById(id);
 
-            if (category==null)
+            if (category == null)
             {
                 throw new CategoryWithGivenIdDoesNotExist();
             }

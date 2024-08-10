@@ -6,7 +6,6 @@ using SmallShop.Services.Categories.Contracts;
 using SmallShop.Services.Categories.Exceptions;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
-using System;
 using Xunit;
 
 namespace SmallShop.Services.Test.Unit.Categories
