@@ -38,7 +38,7 @@ namespace SmallShop.Services.Categories
         {
             var categoryId = _repository.GetIdByTitle(dto.Title);
 
-            if (categoryId != null)
+            if (categoryId!.Value is not 0)
             {
                 return categoryId.Value;
             }

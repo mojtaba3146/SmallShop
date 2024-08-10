@@ -5,6 +5,7 @@
         public Category()
         {
             Goodss = new HashSet<Goods>();
+            Title = string.Empty;
         }
         public int Id { get; set; }
         public string Title { get; set; }

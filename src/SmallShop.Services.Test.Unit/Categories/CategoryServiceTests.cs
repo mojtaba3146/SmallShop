@@ -122,11 +122,35 @@ namespace SmallShop.Services.Test.Unit.Categories
             expected.Should().ThrowExactly<GoodsExistInCategoryException>();
         }
 
+        [Fact]
+        public void AddSeed_adds_seed_category_properly()
+        {
+            AddCategoryDto dto = CategoryFactory.CreateAddCategoryDto("dummyCategory");
 
-        private void CreateCategory(string categoryTitle)
+            _sut.AddSeed(dto);
+
+            _dataContext.Categories.Should()
+                .Contain(x => x.Title == dto.Title);
+        }
+
+        [Fact]
+        public void AddSeed_return_category_id_properly()
+        {
+            var id = CreateCategory("dummyCategory");
+            AddCategoryDto dto = CategoryFactory.CreateAddCategoryDto("dummyCategory");
+
+            var expected = _sut.AddSeed(dto);
+
+            expected.Should().Be(id);
+        }
+
+
+        private int CreateCategory(string categoryTitle)
         {
             _category = CategoryFactory.CreateCategory(categoryTitle);
             _dataContext.Manipulate(_ => _.Categories.Add(_category));
+
+            return _category.Id;
         }
         private void CreateGoods()
         {

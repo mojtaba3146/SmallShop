@@ -2,7 +2,6 @@ using Autofac;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
-using SmallShop.Entities;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Persistence.EF;
 using SmallShop.Persistence.EF.Categories;
@@ -23,7 +22,7 @@ namespace SmallShop.RestApi
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterType<EFDataContext>()
-                .WithParameter("connectionString", Configuration["ConnectionString"])
+                .WithParameter("connectionString", Configuration["ConnectionString"]!)
                  .AsSelf()
                  .InstancePerLifetimeScope();
 
@@ -75,7 +74,7 @@ namespace SmallShop.RestApi
 
             app.UseAuthorization();
 
-            app.UseRouting().UseEndpoints(config =>
+            app.UseEndpoints(config =>
             {
                 config.MapHealthChecks("/health/check", new HealthCheckOptions
                 {
