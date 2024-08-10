@@ -6,7 +6,6 @@ using SmallShop.Services.Categories;
 using SmallShop.Services.Categories.Contracts;
 using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
-using System.Linq;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
