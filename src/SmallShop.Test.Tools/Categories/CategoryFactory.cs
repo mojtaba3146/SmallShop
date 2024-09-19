@@ -1,14 +1,8 @@
 ﻿using SmallShop.Entities;
-using SmallShop.Infrastructure.Test;
 using SmallShop.Persistence.EF;
 using SmallShop.Persistence.EF.Categories;
 using SmallShop.Services.Categories;
 using SmallShop.Services.Categories.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmallShop.Test.Tools.Categories
 {

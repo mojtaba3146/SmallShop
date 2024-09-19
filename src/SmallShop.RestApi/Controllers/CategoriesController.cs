@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SmallShop.Services.Categories.Contracts;
-using System.Collections.Generic;
 
 namespace SmallShop.RestAPI.Controllers
 {

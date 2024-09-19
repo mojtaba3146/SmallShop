@@ -20,16 +20,14 @@ namespace SmallShop.Services.Categories
 
         public void Add(AddCategoryDto dto)
         {
-            var category = new Category();
-            category.Title = dto.Title;
-
             var isTitleExist = _repository.ISExistTitle(dto.Title);
 
             if (isTitleExist)
             {
                 throw new TitleAlreadyExistException();
             }
-
+            var category = new Category {Title = dto.Title };
+           
             _repository.Add(category);
             _unitOfWork.Commit();
         }

@@ -22,6 +22,7 @@ namespace SmallShop.Services.Test.Unit.Categories
                 new EFInMemoryDatabase()
                 .CreateDataContext<EFDataContext>();
             _sut = CategoryFactory.CreateService(_dataContext);
+            _category = new Category();
         }
 
         [Fact]
