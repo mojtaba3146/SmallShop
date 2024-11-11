@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Infrastructure.Jwt;
 using SmallShop.Persistence.EF;
@@ -32,9 +33,9 @@ namespace SmallShop.RestApi
                  .InstancePerLifetimeScope();
 
             builder.RegisterAssemblyTypes(typeof(EFCategoryRepository).Assembly)
-                      .AssignableTo<Repository>()
-                      .AsImplementedInterfaces()
-                      .InstancePerLifetimeScope();
+                          .AssignableTo<Repository>()
+                          .AsImplementedInterfaces()
+                          .InstancePerLifetimeScope();
 
             builder.RegisterAssemblyTypes(typeof(CategoryAppService).Assembly)
                       .AssignableTo<Service>()
@@ -50,6 +51,7 @@ namespace SmallShop.RestApi
         {
 
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SmallShop.RestApi", Version = "v1" });
@@ -86,7 +88,7 @@ namespace SmallShop.RestApi
             services.AddHealthChecks()
                 .AddSqlServer(Configuration["ConnectionString"]!);
 
-            services.AddScoped<IJwtService,JwtTokenService>();
+            services.AddScoped<IJwtService, JwtTokenService>();
 
             var jwtSettings = new JwtSettings();
             Configuration.Bind(nameof(JwtSettings), jwtSettings);
@@ -126,8 +128,10 @@ namespace SmallShop.RestApi
 
             app.UseRouting();
 
-            app.UseAuthentication(); 
+            app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSerilogRequestLogging();
 
             app.UseEndpoints(config =>
             {
@@ -136,6 +140,12 @@ namespace SmallShop.RestApi
                     Predicate = _ => true,
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
+            });
+
+            app.UseEndpoints(config =>
+            {
+                config.MapGet("/mojtaba",
+                    () => "mojtaba khoshnam wrote this app");
             });
 
             app.UseEndpoints(endpoints =>

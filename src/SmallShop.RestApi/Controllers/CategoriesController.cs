@@ -8,10 +8,13 @@ namespace SmallShop.RestAPI.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly CategoryService _service;
+        private readonly ILogger<CategoriesController> _logger;
 
-        public CategoriesController(CategoryService service)
+        public CategoriesController(CategoryService service,
+            ILogger<CategoriesController> logger)
         {
             _service = service;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -29,6 +32,8 @@ namespace SmallShop.RestAPI.Controllers
         [HttpGet]
         public List<GetAllCategoryDto> GetAll()
         {
+            _logger.LogWarning("This Get All Categories Called at {DT}",
+                DateTime.UtcNow.ToLongTimeString());
             return _service.GetAll();
         }
 

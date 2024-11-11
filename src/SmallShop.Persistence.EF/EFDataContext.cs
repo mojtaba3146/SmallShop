@@ -1,18 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SmallShop.Entities;
 using SmallShop.Persistence.EF.Categories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmallShop.Persistence.EF
 {
     public class EFDataContext : DbContext
     {
         public EFDataContext(string connectionString) :
-            this(new DbContextOptionsBuilder().UseSqlServer(connectionString).Options)
+            this(new DbContextOptionsBuilder()
+                .UseSqlServer(connectionString)
+                .LogTo(Console.WriteLine, LogLevel.Information)
+                .Options)
+
         { 
         }
 

@@ -1,5 +1,6 @@
 using Autofac.Extensions.DependencyInjection;
-using SmallShop.RestApi.Configs.BackgroundServices;
+using k8s.KubeConfigModels;
+using Serilog;
 
 namespace SmallShop.RestApi
 {
@@ -16,6 +17,16 @@ namespace SmallShop.RestApi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Application>();
-                });
+                })
+            .UseSerilog((context, configuration) =>
+              configuration.ReadFrom.Configuration(context.Configuration));
+        //.ConfigureLogging(logging =>
+        //{
+        //    logging.ClearProviders();
+        //    logging.AddConsole();
+        //    logging.SetMinimumLevel(LogLevel.Information);
+        //    logging.AddFile("logging/log.txt");
+        //});
+
     }
 }
