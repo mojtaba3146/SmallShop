@@ -29,7 +29,7 @@ namespace SmallShop.Services.Roles
             var role = new Role { Name = Dto.RoleName };
 
             _roleRepository.Add(role);
-            _unitOfWork.Commit();    
+            await _unitOfWork.Commit();    
         }
     }
 }

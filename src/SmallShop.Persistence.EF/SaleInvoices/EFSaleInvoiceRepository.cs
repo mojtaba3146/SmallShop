@@ -1,7 +1,6 @@
-﻿using SmallShop.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using SmallShop.Entities;
 using SmallShop.Services.SaleInvoices.Contracts;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SmallShop.Persistence.EF.SaleInvoices
 {
@@ -19,9 +18,9 @@ namespace SmallShop.Persistence.EF.SaleInvoices
             _dbContext.SaleInvoices.Add(saleInvoice);
         }
 
-        public List<GetAllSaleInvoicesDto> GetAll()
+        public async Task<List<GetAllSaleInvoicesDto>> GetAll()
         {
-            return _dbContext.SaleInvoices
+            return await _dbContext.SaleInvoices
                 .Select(x => new GetAllSaleInvoicesDto
             {
                 InvoiceNum = x.InvoiceNum,
@@ -30,19 +29,19 @@ namespace SmallShop.Persistence.EF.SaleInvoices
                 Count = x.Count,
                 GoodsId = x.GoodsId,
                 Price = x.Price,
-            }).ToList();
+            }).ToListAsync();
         }
 
-        public SaleInvoice GetById(int invoiceNum)
+        public async Task<SaleInvoice?> GetById(int invoiceNum)
         {
-            return _dbContext.SaleInvoices.
-                FirstOrDefault(x => x.InvoiceNum == invoiceNum);
+            return await _dbContext.SaleInvoices.
+                FirstOrDefaultAsync(x => x.InvoiceNum == invoiceNum);
         }
 
-        public bool IsExistInvoiceNum(int invoiceNum)
+        public async Task<bool> IsExistInvoiceNum(int invoiceNum)
         {
-            return _dbContext.SaleInvoices.
-                Any(x => x.InvoiceNum == invoiceNum);
+            return await _dbContext.SaleInvoices.
+                AnyAsync(x => x.InvoiceNum == invoiceNum);
         }
     }
 }

@@ -4,10 +4,10 @@ namespace SmallShop.Services.Categories.Contracts
 {
     public interface CategoryService : Service
     {
-        void Add(AddCategoryDto dto);
-        void Update(int id,UpdateCategoryDto dto);
-        List<GetAllCategoryDto> GetAll();
-        void Delete(int id);
-        int AddSeed(AddCategoryDto dto);
+        Task Add(AddCategoryDto dto);
+        Task Update(int id,UpdateCategoryDto dto);
+        Task<List<GetAllCategoryDto>> GetAll();
+        Task Delete(int id);
+        Task<int> AddSeed(AddCategoryDto dto);
     }
 }

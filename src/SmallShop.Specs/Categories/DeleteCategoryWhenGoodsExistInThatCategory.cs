@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using SmallShop.Entities;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Infrastructure.Test;
@@ -11,8 +10,6 @@ using SmallShop.Services.Categories.Exceptions;
 using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
-using System;
-using System.Linq;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -32,7 +29,7 @@ namespace SmallShop.Specs.Categories
         private readonly UnitOfWork _unitOfWork;
         private Category _category;
         private Goods _goods;
-        Action expected;
+        Func<Task> expected;
         public DeleteCategoryWhenGoodsExistInThatCategory(ConfigurationFixture configuration) : base(configuration)
         {
             _dataContext = CreateDataContext();
@@ -56,9 +53,9 @@ namespace SmallShop.Specs.Categories
         }
 
         [When("درخواست حذف دسته بندی با عنوان 'لبنیات' را دارم")]
-        public void When()
+        public async Task When()
         {
-           expected = () => _sut.Delete(_category.Id);
+           expected = async () => await _sut.Delete(_category.Id);
         }
 
         [Then("دسته بندی که در آن کالا وجود داشته باشد قابل حذف کردن نیست")]
@@ -69,19 +66,19 @@ namespace SmallShop.Specs.Categories
         }
 
         [And("خطایی با عنوان 'در دسته بندی کالا وجود دارد' باید رخ دهد")]
-        public void ThenAnd()
+        public async Task ThenAnd()
         {
-            expected.Should().ThrowExactly<GoodsExistInCategoryException>();
+           await expected.Should().ThrowExactlyAsync<GoodsExistInCategoryException>();
         }
 
         [Fact]
-        public void Run()
+        public async void Run()
         {
             Given();
             GivenAnd();
-            When();
+            await When();
             Then();
-            ThenAnd();
+            await ThenAnd();
         }
     }
 }

@@ -26,121 +26,121 @@ namespace SmallShop.Services.Test.Unit.Categories
         }
 
         [Fact]
-        public void Add_adds_category_properly()
+        public async Task Add_adds_category_properly()
         {
-            AddCategoryDto dto =CategoryFactory.CreateAddCategoryDto("لبنیات");
+            AddCategoryDto dto = CategoryFactory.CreateAddCategoryDto("لبنیات");
 
-            _sut.Add(dto);
+            await _sut.Add(dto);
 
             _dataContext.Categories.Should()
                 .Contain(x => x.Title == dto.Title);
         }
         [Fact]
-        public void Add_throw_TitleAlreadyExistException_when_given_title_alreadyExist()
+        public async Task Add_throw_TitleAlreadyExistException_when_given_title_alreadyExist()
         {
             CreateCategory("لبنیات");
             AddCategoryDto dto = CategoryFactory.CreateAddCategoryDto("لبنیات");
 
-            Action expected = () => _sut.Add(dto);
+            var expected = async () => await _sut.Add(dto);
 
-            expected.Should().ThrowExactly<TitleAlreadyExistException>();
+            await expected.Should().ThrowExactlyAsync<TitleAlreadyExistException>();
         }
-    
+
         [Fact]
-        public void Update_update_category_properly()
+        public async Task Update_update_category_properly()
         {
             CreateCategory("لبنیات");
             var dto = CategoryFactory.CreateUpdateCategoryDto("خشکبار");
 
-            _sut.Update(_category.Id, dto);
+            await _sut.Update(_category.Id, dto);
 
             _dataContext.Categories.Should()
                 .Contain(x => x.Title == dto.Title);
         }
 
         [Fact]
-        public void Update_throw_TitleAlreadyExistException_when_given_title_alreadyExist()
+        public async Task Update_throw_TitleAlreadyExistException_when_given_title_alreadyExist()
         {
             CreateCategory("لبنیات");
             CreateCategory("خشکبار");
             var dto = CategoryFactory.CreateUpdateCategoryDto("خشکبار");
 
-            Action expected = () => _sut.Update(_category.Id, dto);
+            var expected = async () => await _sut.Update(_category.Id, dto);
 
-            expected.Should().ThrowExactly<TitleAlreadyExistException>();
+            await expected.Should().ThrowExactlyAsync<TitleAlreadyExistException>();
         }
 
         [Theory]
         [InlineData(500)]
-        public void Update_throw_CategoryWithGivenIdDoesNotExist_when_given_id_does_not_exist(int fakeCategoryId)
+        public async Task Update_throw_CategoryWithGivenIdDoesNotExist_when_given_id_does_not_exist(int fakeCategoryId)
         {
             var dto = CategoryFactory.CreateUpdateCategoryDto("خشکبار");
 
-            Action expected = () => _sut.Update(fakeCategoryId, dto);
+            var expected = async () => await _sut.Update(fakeCategoryId, dto);
 
-            expected.Should().ThrowExactly<CategoryWithGivenIdDoesNotExist>();
+            await expected.Should().ThrowExactlyAsync<CategoryWithGivenIdDoesNotExist>();
         }
 
         [Fact]
-        public void GetAll_return_all_categories_properly()
+        public async Task GetAll_return_all_categories_properly()
         {
             CreateCategory("لبنیات");
 
-            var expected=_sut.GetAll();
+            var expected = await _sut.GetAll();
 
             expected.Should().HaveCount(1);
-            expected.Should().Contain(_=>_.Title==_category.Title);
+            expected.Should().Contain(_ => _.Title == _category.Title);
         }
 
         [Fact]
-        public void Delete_delete_category_properly()
+        public async Task Delete_delete_category_properly()
         {
             CreateCategory("لبنیات");
 
-            _sut.Delete(_category.Id);
+            await _sut.Delete(_category.Id);
 
             _dataContext.Categories.Should()
-                .NotContain(_=>_.Title==_category.Title);
+                .NotContain(_ => _.Title == _category.Title);
         }
 
         [Theory]
         [InlineData(500)]
-        public void Delete_throw_CategoryWithGivenIdDoesNotExist_when_given_id_does_not_exist(int fakeCategoryId)
+        public async Task Delete_throw_CategoryWithGivenIdDoesNotExist_when_given_id_does_not_exist(int fakeCategoryId)
         {
-            Action expected = () => _sut.Delete(fakeCategoryId);
+            var expected = async () => await _sut.Delete(fakeCategoryId);
 
-            expected.Should().ThrowExactly<CategoryWithGivenIdDoesNotExist>();
+            await expected.Should().ThrowExactlyAsync<CategoryWithGivenIdDoesNotExist>();
         }
 
         [Fact]
-        public void Delete_throw_GoodsExistInCategoryException_when_goods_exist_in_category()
+        public async Task Delete_throw_GoodsExistInCategoryException_when_goods_exist_in_category()
         {
             CreateCategory("لبنیات");
             CreateGoods();
 
-            Action expected = () => _sut.Delete(_category.Id);
+            var expected = async () => await _sut.Delete(_category.Id);
 
-            expected.Should().ThrowExactly<GoodsExistInCategoryException>();
+            await expected.Should().ThrowExactlyAsync<GoodsExistInCategoryException>();
         }
 
         [Fact]
-        public void AddSeed_adds_seed_category_properly()
+        public async Task AddSeed_adds_seed_category_properly()
         {
             AddCategoryDto dto = CategoryFactory.CreateAddCategoryDto("dummyCategory");
 
-            _sut.AddSeed(dto);
+            await _sut.AddSeed(dto);
 
             _dataContext.Categories.Should()
                 .Contain(x => x.Title == dto.Title);
         }
 
         [Fact]
-        public void AddSeed_return_category_id_properly()
+        public async Task AddSeed_return_category_id_properly()
         {
             var id = CreateCategory("dummyCategory");
             AddCategoryDto dto = CategoryFactory.CreateAddCategoryDto("dummyCategory");
 
-            var expected = _sut.AddSeed(dto);
+            var expected = await _sut.AddSeed(dto);
 
             expected.Should().Be(id);
         }

@@ -6,12 +6,12 @@ namespace SmallShop.Services.Categories.Contracts
     public interface CategoryRepository : Repository
     {
         void Add(Category category);
-        bool ISExistTitle(string title);
-        Category? GetById(int id);
-        List<GetAllCategoryDto> GetAll();
+        Task<bool> IsExistTitle(string title);
+        Task<Category?> GetById(int id);
+        Task<List<GetAllCategoryDto>> GetAll();
         void Delete(Category category);
-        bool IsGoodsExist(int id);
-        bool IsCategoryExistById(int categoryId);
-        int? GetIdByTitle(string title);
+        Task<bool> IsGoodsExist(int id);
+        Task<bool> IsCategoryExistById(int categoryId);
+        Task<int?> GetIdByTitle(string title);
     }
 }

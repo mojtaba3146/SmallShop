@@ -4,7 +4,6 @@ using SmallShop.Services.Goodss.Contracts;
 using SmallShop.Services.Goodss.Exceptions;
 using SmallShop.Services.SaleInvoices.Contracts;
 using SmallShop.Services.SaleInvoices.Exceptions;
-using System.Collections.Generic;
 
 namespace SmallShop.Services.SaleInvoices
 {
@@ -23,9 +22,9 @@ namespace SmallShop.Services.SaleInvoices
             _goodsRepository = goodsRepository;
         }
 
-        public void Add(AddSaleInvoiceDto dto)
+        public async Task Add(AddSaleInvoiceDto dto)
         {
-            var isExistInvoiceNum = _repository.
+            var isExistInvoiceNum = await _repository.
                 IsExistInvoiceNum(dto.InvoiceNum);
 
             if (isExistInvoiceNum)
@@ -43,7 +42,7 @@ namespace SmallShop.Services.SaleInvoices
                 GoodsId = dto.GoodsId,
             };
 
-            var goods = _goodsRepository.GetById(dto.GoodsId);
+            var goods = await _goodsRepository.GetById(dto.GoodsId);
 
             if (goods == null)
             {
@@ -54,17 +53,17 @@ namespace SmallShop.Services.SaleInvoices
             goods.SellCount += saleInvoice.Count;
 
             _repository.Add(saleInvoice);
-            _unitOfWork.Commit();
+            await _unitOfWork.Commit();
         }
 
-        public List<GetAllSaleInvoicesDto> GetAll()
+        public async Task<List<GetAllSaleInvoicesDto>> GetAll()
         {
-            return _repository.GetAll();    
+            return await _repository.GetAll();    
         }
 
-        public void Update(int invoiceNum, UpdateSaleInvoiceDto dto)
+        public async Task Update(int invoiceNum, UpdateSaleInvoiceDto dto)
         {
-            var saleInvoice = _repository.GetById(invoiceNum);
+            var saleInvoice = await _repository.GetById(invoiceNum);
 
             if (saleInvoice == null)
             {
@@ -77,7 +76,7 @@ namespace SmallShop.Services.SaleInvoices
             saleInvoice.GoodsId = dto.GoodsId;
             saleInvoice.Count = dto.Count;
 
-            _unitOfWork.Commit();
+            await _unitOfWork.Commit();
         }
     }
 }

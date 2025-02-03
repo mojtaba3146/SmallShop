@@ -12,8 +12,6 @@ using SmallShop.Services.Goodss.Exceptions;
 using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
-using System;
-using System.Linq;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -35,7 +33,7 @@ namespace SmallShop.Specs.Goodss
         private UpdateGoodsDto _dto;
         private Category _category;
         private Goods _goods;
-        private Action expected;
+        private Func<Task> expected;
 
         public UpdateGoodsWithDuplicateName(ConfigurationFixture configuration) : base(configuration)
         {
@@ -68,11 +66,11 @@ namespace SmallShop.Specs.Goodss
         }
 
         [When("کالایی به نام 'ماست میهن' و قیمت '500' و کد کالای '10' و حداقل موجودی '20' و حداکثر موجودی '40' در دسته 'لبنیات' را ویرایش میکنم")]
-        public void When()
+        public async Task When()
         {
             _dto = GoodsFactory.CreateUpdateGoods(_category.Id);
 
-            expected = () => _sut.Update(_goods.GoodsCode, _dto);
+            expected = async () => await _sut.Update(_goods.GoodsCode, _dto);
         }
 
         [Then("تنها یک کالا با عنوان 'ماست میهن' باید وجود داشته باشد")]
@@ -84,20 +82,20 @@ namespace SmallShop.Specs.Goodss
         }
 
         [And("خطایی با عنوان 'عنوان کالا تکراری است' باید رخ دهد")]
-        public void ThenAnd()
+        public async Task ThenAnd()
         {
-            expected.Should().ThrowExactly<GoodsNameIsDuplicatedException>();
+            await expected.Should().ThrowExactlyAsync<GoodsNameIsDuplicatedException>();
         }
 
         [Fact]
-        public void Run()
+        public async void Run()
         {
             Given();
             GivenAnd();
             GivenAndTwo();
-            When();
+            await When();
             Then();
-            ThenAnd();
+            await ThenAnd();
         }
     }
 }

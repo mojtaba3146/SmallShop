@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using SmallShop.Entities;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Infrastructure.Test;
@@ -11,7 +12,6 @@ using SmallShop.Services.Goodss.Contracts;
 using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
-using System.Linq;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -48,26 +48,26 @@ namespace SmallShop.Specs.Goodss
         }
 
         [When("درخواست مشاهده کالایی با موجودی بیشتر از حداکثر موجودی را دارم")]
-        public void When()
+        public async Task When()
         {
-            _sut.GetAllMaxInventory();
+            await _sut.GetAllMaxInventory();
         }
 
         [Then("کالایی به نام 'ماست رامک' و قیمت '500' و کد کالای '10' و حداقل موجودی '20' و حداکثر موجودی '40' و موجودی '40' در دسته 'لبنیات' نمایش داده می شود")]
-        public void Then()
+        public async Task Then()
         {
-            var expected = _dataContext.Goodss.ToList();
+            var expected = await _dataContext.Goodss.ToListAsync();
 
             expected.Should().Contain(_ => _.Name == _goods.Name);
             expected.Should().Contain(_ => _.GoodsCode == _goods.GoodsCode);
         }
 
         [Fact]
-        public void Run()
+        public async void Run()
         {
             Given();
-            When();
-            Then();
+            await When();
+            await Then();
         }
 
         private void CreateGoods()

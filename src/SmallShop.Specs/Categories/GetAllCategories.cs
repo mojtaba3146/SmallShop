@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using SmallShop.Entities;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Infrastructure.Test;
@@ -8,7 +9,6 @@ using SmallShop.Services.Categories;
 using SmallShop.Services.Categories.Contracts;
 using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
-using System.Linq;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -44,26 +44,26 @@ namespace SmallShop.Specs.Categories
         }
 
         [When("درخواست مشاهده دسته بندی کالا را می دهم")]
-        public void When()
+        public async Task When()
         {
-            _sut.GetAll();
+            await _sut.GetAll();
         }
 
         [Then("دسته بندی با عنوان 'لبنیات' نمایش داده می شود")]
-        public void Then()
+        public async Task Then()
         {
-            var expected = _dataContext.Categories.ToList();
+            var expected = await _dataContext.Categories.ToListAsync();
 
             expected.Should().HaveCount(1);
             expected.Should().Contain(_=>_.Title==_category.Title);
         }
 
         [Fact]
-        public void Run()
+        public async void Run()
         {
             Given();
-            When();
-            Then();
+            await When();
+            await Then();
         }
     }
 }

@@ -15,7 +15,6 @@ using SmallShop.Services.SaleInvoices.Exceptions;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
 using SmallShop.Test.Tools.SaleInvoices;
-using System;
 using Xunit;
 
 namespace SmallShop.Services.Test.Unit.SaleInvoices
@@ -45,13 +44,13 @@ namespace SmallShop.Services.Test.Unit.SaleInvoices
         }
 
         [Fact]
-        public void Add_adds_saleInvoice_properly()
+        public async Task Add_adds_saleInvoice_properly()
         {
             CreateCategoryWithGoods();
             AddSaleInvoiceDto dto = SaleInvoiceFactory.
                 CreateAddSaleInvoiceDto(_goods.GoodsCode);
 
-            _sut.Add(dto);
+            await _sut.Add(dto);
 
             _dataContext.SaleInvoices.Should()
                 .Contain(x => x.InvoiceNum == dto.InvoiceNum);
@@ -67,34 +66,34 @@ namespace SmallShop.Services.Test.Unit.SaleInvoices
 
         [Theory]
         [InlineData(40)]
-        public void Add_throw_GoodsDoesNotExistException_when_goods_with_given_goodsCode_does_not_exist(int fakeCode)
+        public async Task Add_throw_GoodsDoesNotExistException_when_goods_with_given_goodsCode_does_not_exist(int fakeCode)
         {
             AddSaleInvoiceDto dto = SaleInvoiceFactory.
                 CreateAddSaleInvoiceDto(fakeCode);
 
-            Action expected = () => _sut.Add(dto);
+            var expected = async () => await _sut.Add(dto);
 
-            expected.Should().ThrowExactly<GoodsDoesNotExistException>();
+            await expected.Should().ThrowExactlyAsync<GoodsDoesNotExistException>();
         }
 
         [Fact]
-        public void Add_throw_InvoiceNumAlreadyExistException_When_given_invoiceNum_already_exist()
+        public async Task Add_throw_InvoiceNumAlreadyExistException_When_given_invoiceNum_already_exist()
         {
             CreateSaleInvoice();
             AddSaleInvoiceDto dto = SaleInvoiceFactory.
                 CreateAddSaleInvoiceDto(_saleInvoice.GoodsId);
 
-            Action expected = () => _sut.Add(dto);
+            var expected = async () => await _sut.Add(dto);
 
-            expected.Should().ThrowExactly<InvoiceNumAlreadyExistException>();
+            await expected.Should().ThrowExactlyAsync<InvoiceNumAlreadyExistException>();
         }
 
         [Fact]
-        public void GetAll_return_all_saleInvoices_properly()
+        public async Task GetAll_return_all_saleInvoices_properly()
         {
             CreateSaleInvoice();
 
-            var expected = _sut.GetAll();
+            var expected = await _sut.GetAll();
 
             expected.Should().HaveCount(1);
             expected.Should().Contain(_ => _.BuyerName ==
@@ -109,13 +108,13 @@ namespace SmallShop.Services.Test.Unit.SaleInvoices
         }
 
         [Fact]
-        public void Update_update_SaleInvoice_properly()
+        public async Task Update_update_SaleInvoice_properly()
         {
             CreateSaleInvoice();
             var dto = SaleInvoiceFactory.
                 CreateSaleInvoiceUpdateDto(_goods.GoodsCode);
 
-            _sut.Update(_saleInvoice.InvoiceNum, dto);
+           await _sut.Update(_saleInvoice.InvoiceNum, dto);
 
             _dataContext.SaleInvoices.Should().
                 Contain(_ => _.BuyerName == dto.BuyerName);
@@ -131,14 +130,14 @@ namespace SmallShop.Services.Test.Unit.SaleInvoices
 
         [Theory]
         [InlineData(500, 2)]
-        public void Update_throw_SaleInvoiceDoesNotExistException_when_given_invoiceNum_does_not_exist(int fakeId, int goodsId)
+        public async Task Update_throw_SaleInvoiceDoesNotExistException_when_given_invoiceNum_does_not_exist(int fakeId, int goodsId)
         {
             var dto = SaleInvoiceFactory.
                 CreateSaleInvoiceUpdateDto(goodsId);
 
-            Action expected = () => _sut.Update(fakeId, dto);
+            var expected = async () => await _sut.Update(fakeId, dto);
 
-            expected.Should().ThrowExactly<SaleInvoiceDoesNotExistException>();
+            await expected.Should().ThrowExactlyAsync<SaleInvoiceDoesNotExistException>();
         }
 
         private void CreateSaleInvoice()

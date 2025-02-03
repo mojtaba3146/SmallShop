@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using SmallShop.Entities;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Infrastructure.Test;
@@ -12,7 +13,6 @@ using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
 using SmallShop.Test.Tools.SaleInvoices;
-using System.Linq;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -50,21 +50,21 @@ namespace SmallShop.Specs.SaleInvoices
         }
 
         [When("درخواست ویرایش سند خروج کالا را می دهم")]
-        public void When()
+        public async Task When()
         {
             _dto = SaleInvoiceFactory.
                 CreateSaleInvoiceUpdateDto(_goods.GoodsCode);
 
-            _sut.Update(_saleInvoice.InvoiceNum, _dto);
+            await _sut.Update(_saleInvoice.InvoiceNum, _dto);
         }
 
         [Then("سند خروج کالایی با کد فاکتور ‘1’ و کد کالای ‘10’ و تاریخ '1401' و تعداد کالای ‘2’ و قیمت ‘500’ و نام خریدار ‘امین’ در سیستم وجود دارد")]
-        public void Then()
+        public async Task Then()
         {
-            var expected = _dataContext.SaleInvoices.FirstOrDefault();
+            var expected = await _dataContext.SaleInvoices.FirstOrDefaultAsync();
 
 
-            expected.Price.Should().Be(_dto.Price);
+            expected!.Price.Should().Be(_dto.Price);
             expected.Count.Should().Be(_dto.Count);
             expected.BuyerName.Should().Be(_dto.BuyerName);
             expected.GoodsId.Should().Be(_dto.GoodsId);
@@ -72,11 +72,11 @@ namespace SmallShop.Specs.SaleInvoices
         }
 
         [Fact]
-        public void Run()
+        public async Task Run()
         {
             Given();
-            When();
-            Then();
+            await When();
+            await Then();
         }
 
 

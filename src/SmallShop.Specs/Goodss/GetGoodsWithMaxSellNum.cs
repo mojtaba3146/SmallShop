@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using SmallShop.Entities;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Infrastructure.Test;
@@ -11,7 +12,6 @@ using SmallShop.Services.Goodss.Contracts;
 using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
-using System.Linq;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -54,27 +54,27 @@ namespace SmallShop.Specs.Goodss
         }
 
         [When("درخواست مشاهده کالایی با فروش بیشتر را دارم")]
-        public void When()
+        public async Task When()
         {
-            _sut.GetBestSellerGoods();
+            await _sut.GetBestSellerGoods();
         }
 
         [Then("کالایی به نام 'ماست میهن' و کد کالای '20'  در دسته 'لبنیات' نشان داده می شود")]
-        public void Then()
+        public async Task Then()
         {
-            var expected = _dataContext.Goodss.ToList();
+            var expected = await _dataContext.Goodss.ToListAsync();
 
             expected.Should().Contain(_ => _.Name == _goodsTwo.Name);
             expected.Should().Contain(_ => _.GoodsCode == _goodsTwo.GoodsCode);
         }
 
         [Fact]
-        public void Run()
+        public async void Run()
         {
             Given();
             GivenAnd();
-            When();
-            Then();
+            await When();
+            await Then();
         }
 
         private void CreateFirstGoods()

@@ -1,10 +1,5 @@
 ﻿using SmallShop.Entities;
 using SmallShop.Services.Goodss.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmallShop.Test.Tools.Goodss
 {

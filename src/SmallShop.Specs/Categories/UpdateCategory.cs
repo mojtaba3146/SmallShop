@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using SmallShop.Entities;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Infrastructure.Test;
@@ -8,7 +9,6 @@ using SmallShop.Services.Categories;
 using SmallShop.Services.Categories.Contracts;
 using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
-using System.Linq;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -44,27 +44,27 @@ namespace SmallShop.Specs.Categories
         }
 
         [When("عنوان دسته بندی را به 'خشکبار' تغییر می دهم")]
-        public void When()
+        public async Task When()
         {
             _dto=CategoryFactory.CreateUpdateCategoryDto("خشکبار");
 
-            _sut.Update(_category.Id,_dto);
+            await _sut.Update(_category.Id,_dto);
         }
 
         [Then("دسته بندی با عنوان 'خشکبار' در فهرست دسته بندی کالا باید وجود داشته باشد")]
-        public void Then()
+        public async Task Then()
         {
-            var expected = _dataContext.Categories.FirstOrDefault();
+            var expected =await _dataContext.Categories.FirstOrDefaultAsync();
 
-            expected.Title.Should().Be(_dto.Title);
+            expected!.Title.Should().Be(_dto.Title);
         }
 
         [Fact]
-        public void Run()
+        public async Task Run()
         {
             Given();
-            When();
-            Then();
+            await When();
+            await Then();
         }
     }
 }

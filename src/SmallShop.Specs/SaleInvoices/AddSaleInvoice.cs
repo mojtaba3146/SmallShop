@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using SmallShop.Entities;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Infrastructure.Test;
@@ -12,7 +13,6 @@ using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
 using SmallShop.Test.Tools.SaleInvoices;
-using System.Linq;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -56,17 +56,17 @@ namespace SmallShop.Specs.SaleInvoices
         }
 
         [When("کالایی با نام ‘ماست رامک’ و تعداد ‘2’ و قیمت ‘ 500’ و کد کالای ‘10’ و تاریخ ’1401’ و نام خریدار ‘سپهر’ خارج می شود")]
-        public void When()
+        public async Task When()
         {
             _dto = SaleInvoiceFactory.CreateAddSaleInvoiceDto(_goods.GoodsCode);
 
-            _sut.Add(_dto);
+            await _sut.Add(_dto);
         }
 
         [Then("سند خروج کالایی با کد فاکتور ‘1’ و کد کالای ‘10’ و تاریخ '1401' و تعداد کالای ‘2’ و قیمت ‘500’ و نام خریدار ‘سپهر’ در سیستم وجود دارد")]
-        public void Then()
+        public async Task Then()
         {
-            var expected = _dataContext.SaleInvoices.FirstOrDefault();
+            var expected = await _dataContext.SaleInvoices.FirstOrDefaultAsync();
 
             expected.InvoiceNum.Should().Be(_dto.InvoiceNum);
             expected.Price.Should().Be(_dto.Price);
@@ -83,12 +83,12 @@ namespace SmallShop.Specs.SaleInvoices
         }
 
         [Fact]
-        public void Run()
+        public async Task Run()
         {
             Given();
             GivenAnd();
-            When();
-            Then();
+            await When();
+            await Then();
             ThenAnd();
         }
 

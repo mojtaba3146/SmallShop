@@ -9,8 +9,6 @@ using SmallShop.Services.Categories.Contracts;
 using SmallShop.Services.Categories.Exceptions;
 using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
-using System;
-using System.Linq;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -30,7 +28,7 @@ namespace SmallShop.Specs.Categories
         private readonly UnitOfWork _unitOfWork;
         private Category _category;
         private UpdateCategoryDto _dto;
-        Action expected;
+        Func<Task> expected;
         public UpdateCategoryWithDuplicateTitle(ConfigurationFixture configuration) : base(configuration)
         {
             _dataContext = CreateDataContext();
@@ -53,12 +51,12 @@ namespace SmallShop.Specs.Categories
         }
 
         [When("دسته بندی با عنوان  ‘لبنیات ’را به ‘خشکبار’  تغییر می دهم")]
-        public void When()
+        public async Task When()
         {
             var category = _dataContext.Categories.Where(c => c.Title == "لبنیات");
             _dto = CategoryFactory.CreateUpdateCategoryDto("خشکبار");
 
-            expected =() => _sut.Update(_category.Id, _dto);
+            expected = async () => await _sut.Update(_category.Id, _dto);
         }
 
         [Then("تنها یک دسته بندی با عنوان 'خشکبار' باید در فهرست دسته بندی کالا وجود داشته باشد")]
@@ -69,19 +67,19 @@ namespace SmallShop.Specs.Categories
         }
 
         [And("خطایی با عنوان ‘عنوان دسته بندی کالا تکراری است’ باید رخ دهد")]
-        public void ThenAnd()
+        public async Task ThenAnd()
         {
-            expected.Should().ThrowExactly<TitleAlreadyExistException>();
+            await expected.Should().ThrowExactlyAsync<TitleAlreadyExistException>();
         }
 
         [Fact]
-        public void Run()
+        public async void Run()
         {
             Given();
             GivenAnd();
-            When();
+            await When();
             Then();
-            ThenAnd();
+            await ThenAnd();
         }
 
     }

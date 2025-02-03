@@ -15,7 +15,6 @@ using SmallShop.Services.PurchaseInvoices.Exceptions;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
 using SmallShop.Test.Tools.PurchaseInvoices;
-using System;
 using Xunit;
 
 namespace SmallShop.Services.Test.Unit.PurchaseInvoices
@@ -45,13 +44,13 @@ namespace SmallShop.Services.Test.Unit.PurchaseInvoices
         }
 
         [Fact]
-        public void Add_adds_purchaseInvoice_properly()
+        public  async Task Add_adds_purchaseInvoice_properly()
         {
             CreateCategoryWithGoods();
             AddPurchaseInvoiceDto dto = PurchaseInvoiceFactory.
                 CreateAddPurchaseInvoiceDto(_goods.GoodsCode);
 
-            _sut.Add(dto);
+            await _sut.Add(dto);
 
             _dataContext.PurchaseInvoices.Should()
                 .Contain(x => x.InvoiceNum == dto.InvoiceNum);
@@ -67,34 +66,34 @@ namespace SmallShop.Services.Test.Unit.PurchaseInvoices
 
         [Theory]
         [InlineData(40)]
-        public void Add_throw_GoodsDoesNotExistException_when_goods_with_given_goodsCode_does_not_exist(int fakeCode)
+        public async Task Add_throw_GoodsDoesNotExistException_when_goods_with_given_goodsCode_does_not_exist(int fakeCode)
         {
             AddPurchaseInvoiceDto dto = PurchaseInvoiceFactory.
                 CreateAddPurchaseInvoiceDto(fakeCode);
 
-            Action expected = () => _sut.Add(dto);
+            var expected = async () => await _sut.Add(dto);
 
-            expected.Should().ThrowExactly<GoodsDoesNotExistException>();
+            await expected.Should().ThrowExactlyAsync<GoodsDoesNotExistException>();
         }
 
         [Fact]
-        public void Add_throw_InvoiceNumAlreadyExistException_When_given_invoiceNum_already_exist()
+        public async Task Add_throw_InvoiceNumAlreadyExistException_When_given_invoiceNum_already_exist()
         {
             CreatePurchaseInvoice();
             AddPurchaseInvoiceDto dto = PurchaseInvoiceFactory.
                 CreateAddPurchaseInvoiceDto(_purchaseInvoice.GoodsId);
 
-            Action expected = () => _sut.Add(dto);
+            var expected = async () => await _sut.Add(dto);
 
-            expected.Should().ThrowExactly<InvoiceNumAlreadyExistException>();
+            await expected.Should().ThrowExactlyAsync<InvoiceNumAlreadyExistException>();
         }
 
         [Fact]
-        public void GetAll_return_all_purchaseInvoices_properly()
+        public async Task GetAll_return_all_purchaseInvoices_properly()
         {
             CreatePurchaseInvoice();
 
-            var expected = _sut.GetAll();
+            var expected = await _sut.GetAll();
 
             expected.Should().HaveCount(1);
             expected.Should().Contain(_ => _.SellerName ==
@@ -109,13 +108,13 @@ namespace SmallShop.Services.Test.Unit.PurchaseInvoices
         }
 
         [Fact]
-        public void Update_update_purchaseInvoice_properly()
+        public async Task Update_update_purchaseInvoice_properly()
         {
             CreatePurchaseInvoice();
             var dto = PurchaseInvoiceFactory.
                 CreateUpdatePurchaseInvoiceDto(_purchaseInvoice.GoodsId);
 
-            _sut.Update(_purchaseInvoice.InvoiceNum, dto);
+            await _sut.Update(_purchaseInvoice.InvoiceNum, dto);
 
             _dataContext.PurchaseInvoices.Should().
                 Contain(_=>_.SellerName==dto.SellerName);
@@ -131,14 +130,14 @@ namespace SmallShop.Services.Test.Unit.PurchaseInvoices
 
         [Theory]
         [InlineData(500, 2)]
-        public void Update_throw_PurchaseInvoiceDoesNotExistException_when_given_invoiceNum_does_not_exist(int fakeId,int goodsId)
+        public async Task Update_throw_PurchaseInvoiceDoesNotExistException_when_given_invoiceNum_does_not_exist(int fakeId,int goodsId)
         {
             var dto = PurchaseInvoiceFactory.
                 CreateUpdatePurchaseInvoiceDto(goodsId);
 
-            Action expected = () => _sut.Update(fakeId, dto);
+            var expected = async () => await _sut.Update(fakeId, dto);
 
-            expected.Should().ThrowExactly<PurchaseInvoiceDoesNotExistException>();
+            await expected.Should().ThrowExactlyAsync<PurchaseInvoiceDoesNotExistException>();
         }
 
         private void CreatePurchaseInvoice()

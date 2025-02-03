@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using SmallShop.Entities;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Infrastructure.Test;
@@ -11,7 +12,6 @@ using SmallShop.Services.Goodss.Contracts;
 using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
-using System.Linq;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -43,33 +43,33 @@ namespace SmallShop.Specs.Goodss
         }
 
         [Given("دسته بندی با عنوان 'لبنیات' در فهرست دسته بندی کالا وجود دارد ")]
-        public void Given()
+        public async Task Given()
         {
             _category = CategoryFactory.CreateCategory("لبنیات");
-            _dataContext.Manipulate(_ => _.Categories.Add(_category));
+            _dataContext.Manipulate( _ => _.Categories.Add(_category));
         }
 
         [And("کالایی به نام 'ماست رامک' و قیمت '500' و کد کالای '10' و حداقل موجودی '20' و حداکثر موجودی '40' در دسته 'لبنیات' وجود دارد")]
-        public void GivenAnd()
+        public async Task GivenAnd()
         {
             _goods = GoodsFactory.CreateGoodsWithCategory(_category.Id);
             _dataContext.Manipulate(_ => _.Goodss.Add(_goods));
         }
 
         [When("کالایی به نام 'ماست رامک' و قیمت '700' و کد کالای '10' و حداقل موجودی '20' و حداکثر موجودی '40' در دسته 'لبنیات' را ویرایش میکنم")]
-        public void When()
+        public async Task When()
         {
             _dto = GoodsFactory.CreateUpdateGoodsDto(_category.Id);
 
-            _sut.Update(_goods.GoodsCode, _dto);
+            await _sut.Update(_goods.GoodsCode, _dto);
         }
 
         [Then("کالایی به نام 'ماست رامک' و قیمت '700' و کد کالای '10' و حداقل موجودی '20' و حداکثر موجودی '40' در دسته 'لبنیات' وجود دارد")]
-        public void Then()
+        public async Task Then()
         {
-            var expected = _dataContext.Goodss.FirstOrDefault();
+            var expected = await _dataContext.Goodss.FirstOrDefaultAsync();
 
-            expected.Name.Should().Be(_dto.Name);
+            expected!.Name.Should().Be(_dto.Name);
             expected.GoodsCode.Should().Be(_dto.GoodsCode);
             expected.MinInventory.Should().Be(_dto.MinInventory);
             expected.MaxInventory.Should().Be(_dto.MaxInventory);
@@ -78,12 +78,12 @@ namespace SmallShop.Specs.Goodss
         }
 
         [Fact]
-        public void Run()
+        public async Task Run()
         {
-            Given();
-            GivenAnd();
-            When();
-            Then();
+            await Given();
+            await GivenAnd();
+            await When();
+            await Then();
         }
     }
 }

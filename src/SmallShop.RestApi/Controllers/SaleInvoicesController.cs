@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SmallShop.Services.SaleInvoices.Contracts;
-using System.Collections.Generic;
 
 namespace SmallShop.RestApi.Controllers
 {
@@ -17,21 +15,21 @@ namespace SmallShop.RestApi.Controllers
         }
 
         [HttpPost]
-        public void Add(AddSaleInvoiceDto dto)
+        public async Task Add(AddSaleInvoiceDto dto)
         {
-            _service.Add(dto);
+            await _service.Add(dto);
         }
 
         [HttpGet]
-        public List<GetAllSaleInvoicesDto> GetAll()
+        public async Task<List<GetAllSaleInvoicesDto>> GetAll()
         {
-            return _service.GetAll();
+            return await _service.GetAll();
         }
 
         [HttpPut]
-        public void Update(int invoiceNum,UpdateSaleInvoiceDto dto)
+        public async Task Update(int invoiceNum,UpdateSaleInvoiceDto dto)
         {
-            _service.Update(invoiceNum, dto);
+            await _service.Update(invoiceNum, dto);
         }
     }
 }

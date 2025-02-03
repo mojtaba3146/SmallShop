@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using SmallShop.Entities;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Infrastructure.Test;
@@ -11,7 +12,6 @@ using SmallShop.Services.Goodss.Contracts;
 using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
-using System.Linq;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -55,19 +55,19 @@ namespace SmallShop.Specs.Goodss
         }
 
         [When(" کالایی به نام 'ماست رامک' و قیمت '500' و کد کالای '10' و حداقل موجودی '20' و حداکثر موجودی '40' در دسته 'لبنیات' تعریف میکنم ")]
-        public void When()
+        public async Task When()
         {
             _dto = GoodsFactory.CreateAddGoodsDto(_category.Id);
 
-            _sut.Add(_dto);
+            await _sut.Add(_dto);
         }
 
         [Then("کالایی به نام 'ماست رامک' و قیمت '500' و کد کالای '10' و حداقل موجودی '20' و حداکثر موجودی '40' در دسته 'لبنیات' باید وجود داشته باشد")]
-        public void Then()
+        public async Task Then()
         {
-            var expected = _dataContext.Goodss.FirstOrDefault();
+            var expected = await _dataContext.Goodss.FirstOrDefaultAsync();
 
-            expected.Name.Should().Be(_dto.Name);
+            expected!.Name.Should().Be(_dto.Name);
             expected.GoodsCode.Should().Be(_dto.GoodsCode);
             expected.MinInventory.Should().Be(_dto.MinInventory);
             expected.MaxInventory.Should().Be(_dto.MaxInventory);
@@ -76,12 +76,12 @@ namespace SmallShop.Specs.Goodss
         }
 
         [Fact]
-        public void Run()
+        public async void Run()
         {
             Given();
             And();
-            When();
-            Then();
+            await When();
+            await Then();
         }
     }
 }

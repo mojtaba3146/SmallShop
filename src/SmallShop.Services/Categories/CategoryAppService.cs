@@ -18,9 +18,9 @@ namespace SmallShop.Services.Categories
             _unitOfWork = unitOfWork;
         }
 
-        public void Add(AddCategoryDto dto)
+        public async Task Add(AddCategoryDto dto)
         {
-            var isTitleExist = _repository.ISExistTitle(dto.Title);
+            var isTitleExist = await _repository.IsExistTitle(dto.Title);
 
             if (isTitleExist)
             {
@@ -29,12 +29,12 @@ namespace SmallShop.Services.Categories
             var category = new Category {Title = dto.Title };
            
             _repository.Add(category);
-            _unitOfWork.Commit();
+            await _unitOfWork.Commit();
         }
 
-        public int AddSeed(AddCategoryDto dto)
+        public async Task<int> AddSeed(AddCategoryDto dto)
         {
-            var categoryId = _repository.GetIdByTitle(dto.Title);
+            var categoryId = await _repository.GetIdByTitle(dto.Title);
 
             if (categoryId!.Value is not 0)
             {
@@ -47,22 +47,22 @@ namespace SmallShop.Services.Categories
             };
 
             _repository.Add(category);
-            _unitOfWork.Commit();
+            await _unitOfWork.Commit();
 
             return category.Id;
 
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var category = _repository.GetById(id);
+            var category = await _repository.GetById(id);
 
             if (category == null)
             {
                 throw new CategoryWithGivenIdDoesNotExist();
             }
 
-            var isGoodsExist = _repository.IsGoodsExist(category.Id);
+            var isGoodsExist = await _repository.IsGoodsExist(category.Id);
 
             if (isGoodsExist)
             {
@@ -70,24 +70,24 @@ namespace SmallShop.Services.Categories
             }
 
             _repository.Delete(category);
-            _unitOfWork.Commit();
+            await _unitOfWork.Commit();
         }
 
-        public List<GetAllCategoryDto> GetAll()
+        public async Task<List<GetAllCategoryDto>> GetAll()
         {
-            return _repository.GetAll();
+            return await _repository.GetAll();
         }
 
-        public void Update(int id, UpdateCategoryDto dto)
+        public async Task Update(int id, UpdateCategoryDto dto)
         {
-            var category = _repository.GetById(id);
+            var category = await _repository.GetById(id);
 
             if (category == null)
             {
                 throw new CategoryWithGivenIdDoesNotExist();
             }
 
-            var isTitleExist = _repository.ISExistTitle(dto.Title);
+            var isTitleExist = await _repository.IsExistTitle(dto.Title);
 
             if (isTitleExist)
             {
@@ -96,7 +96,7 @@ namespace SmallShop.Services.Categories
 
             category.Title = dto.Title;
 
-            _unitOfWork.Commit();
+           await _unitOfWork.Commit();
         }
     }
 }

@@ -15,51 +15,51 @@ namespace SmallShop.RestApi.Controllers
         }
 
         [HttpPost]
-        public void Add(AddGoodsDto dto)
+        public async Task Add(AddGoodsDto dto)
         {
-            _service.Add(dto);
+            await _service.Add(dto);
         }
 
         [HttpGet]
-        public List<GetAllGoodsDto> GetAll()
+        public async Task<List<GetAllGoodsDto>> GetAll()
         {
-            return _service.GetAll();
+            return await _service.GetAll();
         }
 
         [HttpPut]
-        public void Update(int goodsCode,UpdateGoodsDto dto)
+        public async Task Update(int goodsCode,UpdateGoodsDto dto)
         {
-            _service.Update(goodsCode,dto);
+            await _service.Update(goodsCode,dto);
         }
 
         [HttpDelete]
-        public void Delete(int goodsCode)
+        public async Task Delete(int goodsCode)
         {
-            _service.Delete(goodsCode);
+            await _service.Delete(goodsCode);
         }
 
         [HttpGet("/maxsell")]
-        public GetmaxSellerGoodsDto GetMaxSellGoods()
+        public async Task<GetmaxSellerGoodsDto?> GetMaxSellGoods()
         {
-           return _service.GetBestSellerGoods();
+           return await _service.GetBestSellerGoods();
         }
 
         [HttpGet("/mininventory")]
-        public List<GetAllGoodsWithMinInvenDto> GetMinInventory()
+        public async Task<List<GetAllGoodsWithMinInvenDto>> GetMinInventory()
         {
-            return _service.GetAllMinInventory();
+            return await _service.GetAllMinInventory();
         }
 
         [HttpGet("/maxinventory")]
-        public List<GetAllGoodsWithMaxInvenDto> GetMaxInventory()
+        public async Task<List<GetAllGoodsWithMaxInvenDto>> GetMaxInventory()
         {
-            return _service.GetAllMaxInventory();
+            return await _service.GetAllMaxInventory();
         }
 
         [HttpGet("/maxsellincategory")]
-        public List<GetmaxSellerGoodsDto> GetBestSellerInEachCategory()
+        public async Task<List<GetmaxSellerGoodsDto>> GetBestSellerInEachCategory()
         {
-            return _service.GetBestSellerGoodsInEchCategory();
+            return await _service.GetBestSellerGoodsInEchCategory();
         }
     }
 }

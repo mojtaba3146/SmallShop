@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Persistence.EF;
 using SmallShop.Persistence.EF.Categories;
@@ -40,27 +41,27 @@ namespace SmallShop.Specs.Categories
         }
 
         [When("دسته بندی با عنوان 'لبنیات' تعریف می کنم")]
-        public void When()
+        public async Task When()
         {
             _dto=CategoryFactory.CreateAddCategoryDto("لبنیات");
 
-            _sut.Add(_dto);
+            await _sut.Add(_dto);
         }
 
         [Then("دسته بندی با عنوان 'لبنیات' در فهرست دسته بندی کالا باید وجود داشته باشد")]
-        public void Then()
+        public async Task Then()
         {
-            var expected = _dataContext.Categories.FirstOrDefault();
+            var expected =await _dataContext.Categories.FirstOrDefaultAsync();
 
-            expected.Title.Should().Be(_dto.Title);
+            expected!.Title.Should().Be(_dto.Title);
         }
 
         [Fact]
-        public void Run()
+        public async Task Run()
         {
             Given();
-            When();
-            Then();
+            await When();
+            await Then();
         }   
     }
 }

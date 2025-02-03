@@ -30,7 +30,7 @@ namespace SmallShop.Specs.Categories
         private readonly UnitOfWork _unitOfWork;
         private Category _category;
         private AddCategoryDto _dto;
-        Action expected;
+        Func<Task> expected;
         public AddCategoryWithDuplicateTitle(ConfigurationFixture configuration) : base(configuration)
         {
             _dataContext = CreateDataContext();
@@ -48,33 +48,33 @@ namespace SmallShop.Specs.Categories
         }
 
         [When("دسته بندی با عنوان 'لبنیات' تعریف میکنم")]
-        public void When()
+        public async Task When()
         {
             CreateAddCategoryDto();
 
-            expected = () => _sut.Add(_dto);
+            expected = async () => await _sut.Add(_dto);
         }
 
         [Then("تنها یک دسته بندی با عنوان 'لبنیات' باید در فهرست دسته بندی کالا وجود داشته باشد")]
-        public void Then()
+        public async Task Then()
         {
-            _dataContext.Categories.Where(c => c.Title ==
+             _dataContext.Categories.Where(c => c.Title ==
             _dto.Title).Should().HaveCount(1);
         }
 
         [And("خطایی با عنوان ‘عنوان دسته بندی کالا تکراری است’ باید رخ دهد")]
-        public void And()
+        public async Task And()
         {
-            expected.Should().ThrowExactly<TitleAlreadyExistException>();
+            await expected.Should().ThrowExactlyAsync<TitleAlreadyExistException>();
         }
 
         [Fact]
-        public void Run()
+        public async void Run()
         {
             Given();
-            When();
-            Then();
-            And();
+            await When();
+            await Then();
+            await And();
         }
 
         private void CreateAddCategoryDto()

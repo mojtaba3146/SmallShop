@@ -22,9 +22,9 @@ namespace SmallShop.Services.Goodss
             _categoryRepository= categoryRepository;
         }
 
-        public void Add(AddGoodsDto dto)
+        public async Task Add(AddGoodsDto dto)
         {
-            var isTitleDuplicate = _repository.IsExistGoodsName(dto.Name
+            var isTitleDuplicate = await _repository.IsExistGoodsName(dto.Name
                 , dto.CategoryId);
 
             if (isTitleDuplicate)
@@ -32,7 +32,7 @@ namespace SmallShop.Services.Goodss
                 throw new GoodsNameIsDuplicatedException();
             }
 
-            var isCategoryExist = _categoryRepository
+            var isCategoryExist = await _categoryRepository
                 .IsCategoryExistById(dto.CategoryId);
 
             if (!isCategoryExist)
@@ -51,17 +51,17 @@ namespace SmallShop.Services.Goodss
             };
 
             _repository.Add(goods);
-            _unitOfWork.Commit();
+            await _unitOfWork.Commit();
         }
 
-        public void AddFirstSeed(AddGoodsDto dto)
+        public async Task AddFirstSeed(AddGoodsDto dto)
         {
-            var isSeedDataExist = _repository.IsExistGoodsName(dto.Name
+            var isSeedDataExist = await _repository.IsExistGoodsName(dto.Name
                , dto.CategoryId);
 
             if (!isSeedDataExist)
             {
-                var isCategoryExist = _categoryRepository
+                var isCategoryExist = await _categoryRepository
                 .IsCategoryExistById(dto.CategoryId);
 
                 if (!isCategoryExist)
@@ -80,14 +80,14 @@ namespace SmallShop.Services.Goodss
                 };
 
                 _repository.Add(goods);
-                _unitOfWork.Commit();
+                await _unitOfWork.Commit();
             }
 
         }
 
-        public void Delete(int goodsCode)
+        public async Task Delete(int goodsCode)
         {
-            var goods = _repository.GetById(goodsCode);
+            var goods = await _repository.GetById(goodsCode);
 
             if (goods == null)
             {
@@ -96,44 +96,44 @@ namespace SmallShop.Services.Goodss
 
             _repository.Delete(goods);
 
-            _unitOfWork.Commit();
+            await _unitOfWork.Commit();
         }
 
-        public List<GetAllGoodsDto> GetAll()
+        public async Task<List<GetAllGoodsDto>> GetAll()
         {
-            return _repository.GetAll();
+            return await _repository.GetAll();
         }
 
-        public List<GetAllGoodsWithMaxInvenDto> GetAllMaxInventory()
+        public async Task<List<GetAllGoodsWithMaxInvenDto>> GetAllMaxInventory()
         {
-            return _repository.GetAllMaxInventory();
+            return await _repository.GetAllMaxInventory();
         }
 
-        public List<GetAllGoodsWithMinInvenDto> GetAllMinInventory()
+        public async Task<List<GetAllGoodsWithMinInvenDto>> GetAllMinInventory()
         {
-            return _repository.GetAllMinInventory();
+            return await _repository.GetAllMinInventory();
         }
 
-        public GetmaxSellerGoodsDto GetBestSellerGoods()
+        public async Task<GetmaxSellerGoodsDto?> GetBestSellerGoods()
         {
-            return _repository.GetBestSellerGoods();
+            return await _repository.GetBestSellerGoods();
         }
 
-        public List<GetmaxSellerGoodsDto> GetBestSellerGoodsInEchCategory()
+        public async Task<List<GetmaxSellerGoodsDto>> GetBestSellerGoodsInEchCategory()
         {
-            return _repository.GetBestSellerGoodsInEchCategory();
+            return await _repository.GetBestSellerGoodsInEchCategory();
         }
 
-        public void Update(int goodsCode, UpdateGoodsDto dto)
+        public async Task Update(int goodsCode, UpdateGoodsDto dto)
         {
-            Goods goods = _repository.GetById(goodsCode);
+            var goods = await _repository.GetById(goodsCode);
 
             if (goods == null)
             {
                 throw new GoodsDoesNotExistException();
             }
 
-            var isTitleDuplicate = _repository.IsExistGoodsNameDuplicate(dto.Name
+            var isTitleDuplicate = await _repository.IsExistGoodsNameDuplicate(dto.Name
                 , dto.CategoryId,goodsCode);
 
             if (isTitleDuplicate)
@@ -141,7 +141,7 @@ namespace SmallShop.Services.Goodss
                 throw new GoodsNameIsDuplicatedException();
             }
 
-            var isCategoryExist = _categoryRepository
+            var isCategoryExist = await _categoryRepository
                 .IsCategoryExistById(dto.CategoryId);
 
             if (!isCategoryExist)
@@ -155,7 +155,7 @@ namespace SmallShop.Services.Goodss
             goods.MaxInventory = dto.MaxInventory;
             goods.CategoryId = dto.CategoryId;
 
-            _unitOfWork.Commit();
+            await _unitOfWork.Commit();
         }
     }
 }

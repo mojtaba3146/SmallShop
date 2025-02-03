@@ -4,7 +4,6 @@ using SmallShop.Services.Goodss.Contracts;
 using SmallShop.Services.Goodss.Exceptions;
 using SmallShop.Services.PurchaseInvoices.Contracts;
 using SmallShop.Services.PurchaseInvoices.Exceptions;
-using System.Collections.Generic;
 
 namespace SmallShop.Services.PurchaseInvoices
 {
@@ -23,9 +22,9 @@ namespace SmallShop.Services.PurchaseInvoices
             _goodsRepository = goodsRepository;
         }
 
-        public void Add(AddPurchaseInvoiceDto dto)
+        public async Task Add(AddPurchaseInvoiceDto dto)
         {
-            var isExistInvoiceNum = _repository.
+            var isExistInvoiceNum = await _repository.
                 IsExistInvoiceNum(dto.InvoiceNum);
 
             if (isExistInvoiceNum)
@@ -42,7 +41,7 @@ namespace SmallShop.Services.PurchaseInvoices
                 InvoiceNum = dto.InvoiceNum,
             };
 
-            var goods= _goodsRepository.GetById(dto.GoodsId);
+            var goods= await _goodsRepository.GetById(dto.GoodsId);
 
             if (goods==null)
             {
@@ -52,17 +51,17 @@ namespace SmallShop.Services.PurchaseInvoices
             goods.GoodsInventory += purchaseInvoice.Count;
 
             _repository.Add(purchaseInvoice);
-            _unitOfWork.Commit();
+            await _unitOfWork.Commit();
         }
 
-        public List<GetAllPurchaseInvoicesDto> GetAll()
+        public async Task<List<GetAllPurchaseInvoicesDto>> GetAll()
         {
-            return _repository.GetAll();
+            return await _repository.GetAll();
         }
 
-        public void Update(int invoiceNum, UpdatePurchaseInvoiceDto dto)
+        public async Task Update(int invoiceNum, UpdatePurchaseInvoiceDto dto)
         {
-            var purchaseInvoice = _repository.GetById(invoiceNum);
+            var purchaseInvoice = await _repository.GetById(invoiceNum);
 
             if (purchaseInvoice == null)
             {
@@ -75,7 +74,7 @@ namespace SmallShop.Services.PurchaseInvoices
             purchaseInvoice.Date = dto.Date;
             purchaseInvoice.GoodsId = dto.GoodsId;
 
-            _unitOfWork.Commit();
+            await _unitOfWork.Commit();
         }
     }
 }

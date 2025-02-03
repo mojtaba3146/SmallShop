@@ -18,29 +18,29 @@ namespace SmallShop.RestAPI.Controllers
         }
 
         [HttpPost]
-        public void Add(AddCategoryDto dto)
+        public async Task Add(AddCategoryDto dto)
         {
-            _service.Add(dto);
+            await _service.Add(dto);
         }
 
         [HttpPut]
-        public void Update(int id,UpdateCategoryDto dto)
+        public async Task Update(int id,UpdateCategoryDto dto)
         {
-            _service.Update(id,dto);
+            await _service.Update(id,dto);
         }
 
         [HttpGet]
-        public List<GetAllCategoryDto> GetAll()
+        public async Task<List<GetAllCategoryDto>> GetAll()
         {
             _logger.LogWarning("This Get All Categories Called at {DT}",
                 DateTime.UtcNow.ToLongTimeString());
-            return _service.GetAll();
+            return await _service.GetAll();
         }
 
         [HttpDelete]
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            _service.Delete(id);
+           await _service.Delete(id);
         }
 
     }

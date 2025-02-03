@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using SmallShop.Entities;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Infrastructure.Test;
@@ -12,7 +13,6 @@ using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
 using SmallShop.Test.Tools.PurchaseInvoices;
-using System.Linq;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -56,19 +56,20 @@ namespace SmallShop.Specs.PurchaseInvoices
         }
 
         [When("کالایی با نام ‘ماست رامک’ و تعداد ‘20’ و قیمت ‘ 400’ و کد کالای ‘10’ و تاریخ ’1401’ و نام فروشنده ‘سپهر’ وارد می شود")]
-        public void When()
+        public async Task When()
         {
             _dto = PurchaseInvoiceFactory.CreateAddPurchaseInvoiceDto(_goods.GoodsCode);
 
-            _sut.Add(_dto);
+            await _sut.Add(_dto);
         }
 
         [Then("سند ورود کالایی با کد فاکتور ‘1’ و کد کالای ‘10’ و تاریخ '1401' و تعداد کالای ‘20’ و قیمت ‘400’ و نام فروشنده ‘سپهر’ در سیستم وجود دارد")]
-        public void Then()
+        public async Task Then()
         {
-            var expected = _dataContext.PurchaseInvoices.FirstOrDefault();
+            var expected = await _dataContext.PurchaseInvoices
+                .FirstOrDefaultAsync();
 
-            expected.InvoiceNum.Should().Be(_dto.InvoiceNum);
+            expected!.InvoiceNum.Should().Be(_dto.InvoiceNum);
             expected.Price.Should().Be(_dto.Price);
             expected.Count.Should().Be(_dto.Count);
             expected.SellerName.Should().Be(_dto.SellerName);
@@ -82,12 +83,12 @@ namespace SmallShop.Specs.PurchaseInvoices
         }
 
         [Fact]
-        public void Run()
+        public async void Run()
         {
             Given();
             GivenAnd();
-            When();
-            Then();
+            await When();
+            await Then();
             ThenAnd();
         }
 

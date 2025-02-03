@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using SmallShop.Entities;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Infrastructure.Test;
@@ -8,7 +9,6 @@ using SmallShop.Services.Categories;
 using SmallShop.Services.Categories.Contracts;
 using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
-using System.Linq;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -44,15 +44,15 @@ namespace SmallShop.Specs.Categories
         }
 
         [When("درخواست حذف دسته بندی با عنوان 'لبنیات' را دارم")]
-        public void When()
+        public async Task When()
         {
-            _sut.Delete(_category.Id);
+            await _sut.Delete(_category.Id);
         }
 
         [Then("دسته بندی با عنوان 'لبنیات' از فهرست دسته بندی کالا نباید وجود داشته باشد")]
-        public void Then()
+        public async Task Then()
         {
-            var expected = _dataContext.Categories.ToList();
+            var expected = await _dataContext.Categories.ToListAsync();
 
             expected.Should().HaveCount(0);
             expected.Should()
@@ -60,11 +60,11 @@ namespace SmallShop.Specs.Categories
         }
 
         [Fact]
-        public void Run()
+        public async void Run()
         {
             Given();
-            When();
-            Then();
+            await When();
+            await Then();
         }
     }
 }

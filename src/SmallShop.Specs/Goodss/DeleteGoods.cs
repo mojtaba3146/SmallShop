@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using SmallShop.Entities;
 using SmallShop.Infrastructure.Application;
 using SmallShop.Infrastructure.Test;
@@ -11,7 +12,6 @@ using SmallShop.Services.Goodss.Contracts;
 using SmallShop.Specs.Infrastructure;
 using SmallShop.Test.Tools.Categories;
 using SmallShop.Test.Tools.Goodss;
-using System.Linq;
 using Xunit;
 using static SmallShop.Specs.BDDHelper;
 
@@ -57,15 +57,15 @@ namespace SmallShop.Specs.Goodss
         }
 
         [When("کالایی به نام 'ماست رامک' و قیمت '500' و کد کالای '10' و حداقل موجودی '20' و حداکثر موجودی '40' در دسته 'لبنیات' را حذف میکنم")]
-        public void When()
+        public async Task When()
         {
-            _sut.Delete(_goods.GoodsCode);
+            await _sut.Delete(_goods.GoodsCode);
         }
 
         [Then("کالایی به نام 'ماست رامک' و قیمت '500' و کد کالای '10' و حداقل موجودی '20' و حداکثر موجودی '40' در دسته 'لبنیات' نباید وجود داشته باشد")]
-        public void Then()
+        public async Task Then()
         {
-            var expected = _dataContext.Goodss.ToList();
+            var expected = await _dataContext.Goodss.ToListAsync();
 
             expected.Should().HaveCount(0);
             expected.Should().NotContain(_ => _.Name == _goods.Name);
@@ -77,12 +77,12 @@ namespace SmallShop.Specs.Goodss
         }
 
         [Fact]
-        public void Run()
+        public async void Run()
         {
             Given();
             GivenAnd();
-            When();
-            Then();
+            await When();
+            await Then();
         }
     }
 }

@@ -18,9 +18,9 @@ namespace SmallShop.RestApi.Configs.BackgroundServices
             _goodsService = goodsService;
             _configuration = configuration;
         }
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
-            var categoryId = _categoryService.AddSeed(new AddCategoryDto
+            var categoryId =await _categoryService.AddSeed(new AddCategoryDto
             {
                 Title = _configuration.GetSection("Category:Title").Value!
             });
@@ -35,7 +35,7 @@ namespace SmallShop.RestApi.Configs.BackgroundServices
                 MaxInventory = 100
             });
 
-            return Task.CompletedTask;
+           // return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

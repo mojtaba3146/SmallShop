@@ -39,12 +39,12 @@ namespace SmallShop.Services.Test.Unit.Goodss
         }
 
         [Fact]
-        public void Add_adds_goods_properly()
+        public async Task Add_adds_goods_properly()
         {
             CreateCategory("لبنیات");
             AddGoodsDto dto = GoodsFactory.CreateAddGoodsDto(_category.Id);
 
-            _sut.Add(dto);
+            await _sut.Add(dto);
 
             _dataContext.Goodss.Should()
                 .Contain(x => x.GoodsCode == dto.GoodsCode);
@@ -61,36 +61,36 @@ namespace SmallShop.Services.Test.Unit.Goodss
         }
 
         [Fact]
-        public void Add_throws_GoodsNameIsDuplicatedException_when_goods_name_already_exists_in_category()
+        public async Task Add_throws_GoodsNameIsDuplicatedException_when_goods_name_already_exists_in_category()
         {
             CreateCategory("لبنیات");
             CreateGoods();
             AddGoodsDto dto = GoodsFactory.CreateAddGoodsDto(_category.Id);
 
-            Action expected = () => _sut.Add(dto);
+            var expected = async () => await _sut.Add(dto);
 
-            expected.Should().ThrowExactly<GoodsNameIsDuplicatedException>();
+            await expected.Should().ThrowExactlyAsync<GoodsNameIsDuplicatedException>();
         }
 
         [Theory]
         [InlineData(40, 20)]
-        public void Add_throw_CategoryNotFoundException_when_category_with_given_id_not_exists(int fakeCategoryId, int categoryID)
+        public async Task Add_throw_CategoryNotFoundException_when_category_with_given_id_not_exists(int fakeCategoryId, int categoryID)
         {
             var dto = GoodsFactory.CreateAddGoodsDto(categoryID);
             dto.CategoryId = fakeCategoryId;
 
-            Action expected = () => _sut.Add(dto);
+            var expected = async () => await _sut.Add(dto);
 
-            expected.Should().ThrowExactly<CategoryNotFoundException>();
+            await expected.Should().ThrowExactlyAsync<CategoryNotFoundException>();
         }
 
         [Fact]
-        public void GetAll_return_all_goods()
+        public async Task GetAll_return_all_goods()
         {
             CreateCategory("لبنیات");
             CreateGoods();
 
-            var expected = _sut.GetAll();
+            var expected = await _sut.GetAll();
 
             expected.Should().HaveCount(1);
             expected.Should().Contain(_ => _.Name == _goods.Name);
@@ -102,13 +102,13 @@ namespace SmallShop.Services.Test.Unit.Goodss
         }
 
         [Fact]
-        public void Update_update_goods_properly()
+        public async Task Update_update_goods_properly()
         {
             CreateCategory("لبنیات");
             CreateGoods();
             var dto = GoodsFactory.CreateUpdateGoodsDto(_category.Id);
 
-            _sut.Update(_goods.GoodsCode, dto);
+            await _sut.Update(_goods.GoodsCode, dto);
 
             _dataContext.Goodss.Should().Contain(_ => _.Name == dto.Name);
             _dataContext.Goodss.Should().Contain(_ => _.Price == dto.Price);
@@ -120,49 +120,49 @@ namespace SmallShop.Services.Test.Unit.Goodss
 
         [Theory]
         [InlineData(500, 2)]
-        public void Update_throw_GoodsDoesNotExistException_when_given_id_does_not_exist(int fakegoodsCode, int categoryId)
+        public async Task Update_throw_GoodsDoesNotExistException_when_given_id_does_not_exist(int fakegoodsCode, int categoryId)
         {
             var dto = GoodsFactory.CreateUpdateGoodsDto(categoryId);
 
-            Action expected = () => _sut.Update(fakegoodsCode, dto);
+            var expected = async () => await _sut.Update(fakegoodsCode, dto);
 
-            expected.Should().ThrowExactly<GoodsDoesNotExistException>();
+            await expected.Should().ThrowExactlyAsync<GoodsDoesNotExistException>();
         }
 
         [Theory]
         [InlineData(40, 20)]
-        public void Update_throw_CategoryNotFoundException_when_category_with_given_id_not_exists(int fakeCategoryId, int categoryID)
+        public async Task Update_throw_CategoryNotFoundException_when_category_with_given_id_not_exists(int fakeCategoryId, int categoryID)
         {
             CreateCategory("لبنیات");
             CreateGoods();
             var dto = GoodsFactory.CreateUpdateGoodsDto(_category.Id);
             dto.CategoryId = fakeCategoryId;
 
-            Action expected = () => _sut.Update(_goods.GoodsCode, dto);
+            var expected = async () => await _sut.Update(_goods.GoodsCode, dto);
 
-            expected.Should().ThrowExactly<CategoryNotFoundException>();
+            await expected.Should().ThrowExactlyAsync<CategoryNotFoundException>();
         }
 
         [Fact]
-        public void Update_throws_GoodsNameIsDuplicatedException_when_goods_name_already_exists_in_category()
+        public async Task Update_throws_GoodsNameIsDuplicatedException_when_goods_name_already_exists_in_category()
         {
             CreateCategory("لبنیات");
             CreateGoods();
             CreateSecondGoods();
             UpdateGoodsDto dto = GoodsFactory.CreateUpdateGoods(_category.Id);
 
-            Action expected = () => _sut.Update(_goods.GoodsCode, dto);
+            var expected = async () => await _sut.Update(_goods.GoodsCode, dto);
 
-            expected.Should().ThrowExactly<GoodsNameIsDuplicatedException>();
+            await expected.Should().ThrowExactlyAsync<GoodsNameIsDuplicatedException>();
         }
 
         [Fact]
-        public void Delete_delete_goods_properly()
+        public async Task Delete_delete_goods_properly()
         {
             CreateCategory("لبنیات");
             CreateGoods();
 
-            _sut.Delete(_goods.GoodsCode);
+            await _sut.Delete(_goods.GoodsCode);
 
             _dataContext.Goodss.Should()
                 .NotContain(_ => _.GoodsCode == _goods.GoodsCode);
@@ -170,33 +170,33 @@ namespace SmallShop.Services.Test.Unit.Goodss
 
         [Theory]
         [InlineData(500)]
-        public void Delete_throw_GoodsDoesNotExistException_when_goods_with_given_goodscode_does_not_exist(int fakeId)
+        public async Task Delete_throw_GoodsDoesNotExistException_when_goods_with_given_goodscode_does_not_exist(int fakeId)
         {
-            Action expected = () => _sut.Delete(fakeId);
+            var expected = async () => await _sut.Delete(fakeId);
 
-            expected.Should().ThrowExactly<GoodsDoesNotExistException>();
+            await expected.Should().ThrowExactlyAsync<GoodsDoesNotExistException>();
         }
 
         [Fact]
-        public void GetBestSellerGoods_return_goods_that_sellNum_is_max()
+        public async Task GetBestSellerGoods_return_goods_that_sellNum_is_max()
         {
             CreateCategory("لبنیات");
             CreateTwoGoods();
 
-            var expected = _sut.GetBestSellerGoods();
+            var expected = await _sut.GetBestSellerGoods();
 
-            expected.Name.Should().Be(_goodsTwo.Name);
+            expected!.Name.Should().Be(_goodsTwo.Name);
             expected.GoodsCode.Should().Be(_goodsTwo.GoodsCode);
         }
 
         [Fact]
-        public void GetBestSellerGoodsInEchCategory_return_goods_that_sellNum_is_max_in_each_category()
+        public async Task GetBestSellerGoodsInEchCategory_return_goods_that_sellNum_is_max_in_each_category()
         {
             CreateCategory("لبنیات");
             CreateCategory("نوشیدنی");
             CreateTwoGoodsWithDiffrentCategory();
 
-            var expected = _sut.GetBestSellerGoodsInEchCategory();
+            var expected = await _sut.GetBestSellerGoodsInEchCategory();
 
             expected.Should().Contain(_ => _.Name == _goods.Name);
             expected.Should().Contain(_ => _.GoodsCode == _goods.GoodsCode);
@@ -205,14 +205,14 @@ namespace SmallShop.Services.Test.Unit.Goodss
         }
 
         [Fact]
-        public void GetAllMinInventory_return_goods_with_goodsInventory_less_than_minInventory()
+        public async Task GetAllMinInventory_return_goods_with_goodsInventory_less_than_minInventory()
         {
             CreateCategory("لبنیات");
             _goods = new GoodsBuilder(_category.Id)
                 .WithGoodsInventory(15).Build();
             _dataContext.Manipulate(_ => _.Goodss.Add(_goods));
 
-            var expected = _sut.GetAllMinInventory();
+            var expected = await _sut.GetAllMinInventory();
 
             expected.Should().HaveCount(1);
             expected.Should().Contain(_ => _.Name == _goods.Name);
@@ -221,14 +221,14 @@ namespace SmallShop.Services.Test.Unit.Goodss
         }
 
         [Fact]
-        public void GetAllMaxInventory_return_goods_with_goodsInventory_more_than_maxInventory()
+        public  async Task GetAllMaxInventory_return_goods_with_goodsInventory_more_than_maxInventory()
         {
             CreateCategory("لبنیات");
             _goods = new GoodsBuilder(_category.Id)
                 .WithGoodsInventory(40).Build();
             _dataContext.Manipulate(_ => _.Goodss.Add(_goods));
 
-            var expected = _sut.GetAllMaxInventory();
+            var expected = await _sut.GetAllMaxInventory();
 
             expected.Should().HaveCount(1);
             expected.Should().Contain(_ => _.Name == _goods.Name);

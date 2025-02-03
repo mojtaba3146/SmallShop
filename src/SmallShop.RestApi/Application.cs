@@ -11,6 +11,7 @@ using SmallShop.Persistence.EF;
 using SmallShop.Persistence.EF.Categories;
 using SmallShop.RestApi.BackGroundServices;
 using SmallShop.RestApi.Configs.BackgroundServices;
+using SmallShop.RestApi.Middleware;
 using SmallShop.Services.Categories;
 using System.Text;
 
@@ -131,7 +132,10 @@ namespace SmallShop.RestApi
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseMiddleware<RequestLogContextMiddleware>();
+
             app.UseSerilogRequestLogging();
+
 
             app.UseEndpoints(config =>
             {

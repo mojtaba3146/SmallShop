@@ -34,7 +34,7 @@ namespace SmallShop.Specs.Goodss
         private readonly CategoryRepository _categoryRepository;
         private Category _category;
         private AddGoodsDto _dto;
-        Action expected;
+        Func<Task> expected;
         public AddGoodsWithDuplicateName(ConfigurationFixture configuration) : base(configuration)
         {
             _dataContext = CreateDataContext();
@@ -60,11 +60,11 @@ namespace SmallShop.Specs.Goodss
         }
 
         [When("کالایی به نام 'ماست رامک' و قیمت '500' و کد کالای '10' و حداقل موجودی '20' و حداکثر موجودی '40' در دسته 'لبنیات' تعریف میکنم")]
-        public void When()
+        public async Task When()
         {
             _dto = GoodsFactory.CreateAddGoodsDto(_category.Id);
 
-            expected = () => _sut.Add(_dto);
+            expected = async () => await _sut.Add(_dto);
         }
 
         [Then("تنها یک کالا با عنوان 'ماست رامک' باید وجود داشته باشد")]
@@ -76,19 +76,19 @@ namespace SmallShop.Specs.Goodss
         }
 
         [And("خطایی با عنوان 'عنوان کالا تکراری است' باید رخ دهد")]
-        public void ThenAnd()
+        public async Task ThenAnd()
         {
-            expected.Should().ThrowExactly<GoodsNameIsDuplicatedException>();
+            await expected.Should().ThrowExactlyAsync<GoodsNameIsDuplicatedException>();
         }
 
         [Fact]
-        public void Run()
+        public async void Run()
         {
             Given();
             GivenAnd();
-            When();
+            await When();
             Then();
-            ThenAnd();
+            await ThenAnd();
         }
         
     }
